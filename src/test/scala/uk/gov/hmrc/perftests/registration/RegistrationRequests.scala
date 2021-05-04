@@ -31,9 +31,29 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
-  def goToAuthLoginPage =
+  def goToAuthLoginPage = {
     http("Go to Auth login page")
       .get(loginUrl + s"/auth-login-stub/gg-sign-in")
       .check(status.in(200, 303))
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+  }
+
+  def upFrontAuthLogin = {
+    http("Enter Auth login credentials ")
+      .get(loginUrl + s"/auth-login-stub/gg-sign-in")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("redirectionUrl", registeredCompanyNameUrl)
+      .check(status.in(200, 303))
+      .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
+  }
+
+  def enterRegisteredCompanyName = {
+    println("URL is" + registeredCompanyNameUrl)
+    http("Enter registered company name")
+      .get(registeredCompanyNameUrl)
+      .formParam("csrfToken", "${csrfToken}")
+//      .formParam("value", "Foo Ltd")
+//      .check(status.in(200,303))
+      .check(status.in(200))
+  }
 }
