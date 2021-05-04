@@ -24,7 +24,32 @@ class RegistrationSimulation extends PerformanceTestRunner {
   setup("registration", "Registration Journey") withRequests(
     goToAuthLoginPage,
     upFrontAuthLogin,
-    enterRegisteredCompanyName)
+    getRegisteredCompanyName,
+    postRegisteredCompanyName,
+    getHasTradingName,
+    postHasTradingName,
+    getTradingName,
+    postTradingName,
+    getPartOfVatGroup,
+    postPartOfVatGroup,
+    getUkVatNumber,
+    postUkVatNumber,
+    getUkVatEffectiveDate,
+    postUkVatEffectiveDate,
+    getUkVatRegisteredPostcode,
+    postUkVatRegisteredPostcode,
+    getIsVatRegisteredInEu,
+    postIsVatRegisteredInEu,
+    getVatRegisteredInEuMemberState,
+    postVatRegisteredInEuMemberState,
+    getEuVatNumber,
+    postEuVatNumber,
+    getAddAdditionalEuVatDetails,
+    postAddAdditionalEuVatDetails,
+    getBusinessAddress,
+    postBusinessAddress,
+    getBusinessContactDetails,
+    postBusinessContactDetails)
 
   runSimulation()
 }
