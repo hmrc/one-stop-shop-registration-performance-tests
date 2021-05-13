@@ -49,7 +49,10 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getBusinessAddress,
     postBusinessAddress,
     getBusinessContactDetails,
-    postBusinessContactDetails)
+    postBusinessContactDetails,
+    getCheckYourAnswers,
+    postCheckYourAnswers,
+    getApplicationComplete)
 
   runSimulation()
 }

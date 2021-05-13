@@ -270,4 +270,26 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("websiteAddress", "www.janesworld.com")
       .check(status.in(200,303))
   }
+
+  def getCheckYourAnswers = {
+    http("Get Check Your Answers page")
+      .get(fullUrl + "/check-your-answers")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postCheckYourAnswers = {
+    http("Post Check Your Answers page")
+      .post(fullUrl + "/check-your-answers")
+      .formParam("csrfToken", "${csrfToken}")
+      .check(status.in(200,303))
+  }
+
+  def getApplicationComplete = {
+    http("Get Application Complete page")
+      .get(fullUrl + "/applicationComplete")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(status.in(200))
+  }
 }
