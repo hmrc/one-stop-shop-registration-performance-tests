@@ -31,6 +31,22 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
+  def getIsBusinessBasedInNorthernIreland = {
+    http("Get Is Business Based in Northern Ireland page")
+      .get(fullUrl + "/isBusinessBasedInNorthernIreland")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postIsBusinessBasedInNorthernIreland = {
+    http("Post Is Business Based in Northern Ireland")
+      .post(fullUrl + "/isBusinessBasedInNorthernIreland")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "true")
+      .check(status.in(303))
+  }
+
+
   def goToAuthLoginPage = {
     http("Go to Auth login page")
       .get(loginUrl + s"/auth-login-stub/gg-sign-in")
