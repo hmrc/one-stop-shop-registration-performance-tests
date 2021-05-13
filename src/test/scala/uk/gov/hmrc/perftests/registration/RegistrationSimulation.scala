@@ -22,6 +22,8 @@ import uk.gov.hmrc.perftests.registration.RegistrationRequests._
 class RegistrationSimulation extends PerformanceTestRunner {
 
   setup("registration", "Registration Journey") withRequests(
+    getIsBusinessBasedInNorthernIreland,
+    postIsBusinessBasedInNorthernIreland,
     goToAuthLoginPage,
     upFrontAuthLogin,
     getRegisteredCompanyName,
