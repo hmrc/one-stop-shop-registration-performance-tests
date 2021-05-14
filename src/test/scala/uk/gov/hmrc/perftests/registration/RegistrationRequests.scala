@@ -65,7 +65,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("affinityGroup", "Individual")
       .formParam("email", "user@test.com")
       .formParam("credentialRole", "User")
-      .formParam("redirectionUrl", fullUrl)
+      .formParam("redirectionUrl", fullUrl + "/registeredCompanyName")
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
   }
