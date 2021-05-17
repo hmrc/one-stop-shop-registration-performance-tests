@@ -46,7 +46,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
   }
 
-
   def goToAuthLoginPage = {
     http("Go to Auth login page")
       .get(loginUrl + s"/auth-login-stub/gg-sign-in")
@@ -102,21 +101,35 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getTradingName = {
+  def getTradingName(index: Int) = {
     http("Get Trading Name page")
-      .get(fullUrl + "/tradingName")
+      .get(fullUrl + s"/tradingName/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postTradingName = {
+  def postTradingName(index: Int) = {
     http("Enter Trading Name")
-      .post(fullUrl + "/tradingName")
+      .post(fullUrl + s"/tradingName/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "Other name")
       .check(status.in(200,303))
   }
+
+  def getAddTradingName =
+    http("Get Add Trading Name page")
+      .get(fullUrl + "/addTradingName")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAddTradingName(answer: Boolean) =
+    http("Add Trading Name")
+      .post(fullUrl + "/addTradingName")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
 
   def getPartOfVatGroup = {
     http("Get Part of VAT Group page")
