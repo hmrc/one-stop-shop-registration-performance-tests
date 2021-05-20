@@ -280,6 +280,34 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("postCode", "AM1 1AM")
       .check(status.in(200,303))
   }
+  
+  def getWebsite(index: Int) =
+    http(s"Get Website page $index")
+      .get(fullUrl + s"/website/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+      
+  def postWebsite(index: Int) =
+    http(s"Enter website $index")
+      .post(fullUrl + s"/website/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "www.example.com")
+      .check(status.in(303))
+
+  def getAddWebsite =
+    http("Get Add Trading Name page")
+      .get(fullUrl + "/addWebsite")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAddWebsite(answer: Boolean) =
+    http("Add Trading Name")
+      .post(fullUrl + "/addWebsite")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
 
   def getBusinessContactDetails = {
     http("Get Business Contact Details page")
@@ -296,7 +324,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("fullName", "Jane Smith")
       .formParam("telephoneNumber", "01478523691")
       .formParam("emailAddress", "jane@email.com")
-      .formParam("websiteAddress", "www.janesworld.com")
       .check(status.in(200,303))
   }
 
