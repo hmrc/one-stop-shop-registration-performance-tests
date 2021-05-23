@@ -261,6 +261,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
+  def getStartDate =
+    http("Get Start Date page")
+      .get(fullUrl + "/startDate")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postStartDate =
+    http("Answer start date")
+      .post(fullUrl + "/startDate")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("choice", "nextPeriod")
+      .check(status.in(303))
+
   def getBusinessAddress = {
     http("Get Business Address page")
       .get(fullUrl + "/businessAddress")
