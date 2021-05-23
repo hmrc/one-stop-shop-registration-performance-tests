@@ -54,6 +54,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postEuVatNumber,
     getAddAdditionalEuVatDetails,
     postAddAdditionalEuVatDetails,
+    getStartDate,
+    postStartDate,
     getBusinessAddress,
     postBusinessAddress,
     getWebsite(1),
