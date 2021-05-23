@@ -213,33 +213,33 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getVatRegisteredInEuMemberState = {
+  def getVatRegisteredInEuMemberState(index: Int) = {
     http("Get VAT Registered in EU Member State page")
-      .get(fullUrl + "/vatRegisteredEuMemberState/1")
+      .get(fullUrl + s"/vatRegisteredEuMemberState/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postVatRegisteredInEuMemberState = {
+  def postVatRegisteredInEuMemberState(index: Int, countryCode: String) = {
     http("Enter VAT Registered in EU Member State")
-      .post(fullUrl + "/vatRegisteredEuMemberState/1")
+      .post(fullUrl + s"/vatRegisteredEuMemberState/$index")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "Spain")
+      .formParam("value", countryCode)
       .check(status.in(200,303))
   }
 
-  def getEuVatNumber = {
+  def getEuVatNumber(index: Int) = {
     http("Get EU VAT Number page")
-      .get(fullUrl + "/euVatNumber/1")
+      .get(fullUrl + s"/euVatNumber/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postEuVatNumber = {
+  def postEuVatNumber(index: Int) = {
     http("Enter EU VAT Number")
-      .post(fullUrl + "/euVatNumber/1")
+      .post(fullUrl + s"/euVatNumber/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "ES852369")
       .check(status.in(200,303))
@@ -253,11 +253,11 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200))
   }
 
-  def postAddAdditionalEuVatDetails = {
+  def postAddAdditionalEuVatDetails(answer: Boolean) = {
     http("Answer Add Additional EU VAT Details")
       .post(fullUrl + "/addAdditionalEuVatDetails")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "false")
+      .formParam("value", answer)
       .check(status.in(200,303))
   }
 
