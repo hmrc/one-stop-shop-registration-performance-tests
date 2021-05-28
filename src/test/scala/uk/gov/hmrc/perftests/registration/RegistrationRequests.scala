@@ -129,13 +129,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postAddTradingName(answer: Boolean) =
+  def postAddTradingName(answer: Boolean) = {
     http("Add Trading Name")
       .post(fullUrl + "/addTradingName")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
-      println(currentLocation)
+  }
 
   def getPartOfVatGroup = {
     http("Get Part of VAT Group page")
