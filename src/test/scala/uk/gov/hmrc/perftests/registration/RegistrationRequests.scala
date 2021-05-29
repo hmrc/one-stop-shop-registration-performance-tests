@@ -31,6 +31,11 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
+  def generateVatNumber(): Int = {
+      val vatNumber = scala.util.Random
+      vatNumber.nextInt(999999999)
+  }
+
   def getIsBusinessBasedInNorthernIreland = {
     http("Get Is Business Based in Northern Ireland page")
       .get(fullUrl + "/isBusinessBasedInNorthernIreland")
@@ -113,11 +118,11 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200))
   }
 
-  def postTradingName(index: Int) = {
+  def postTradingName(index: Int, tradingName: String) = {
     http("Enter Trading Name")
       .post(fullUrl + s"/tradingName/$index")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", s"Other name $index")
+      .formParam("value", tradingName)
       .check(status.in(200,303))
   }
 
@@ -128,12 +133,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postAddTradingName(answer: Boolean) =
+  def postAddTradingName(answer: Boolean) = {
     http("Add Trading Name")
       .post(fullUrl + "/addTradingName")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
+  }
 
   def getPartOfVatGroup = {
     http("Get Part of VAT Group page")
@@ -163,7 +169,7 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Enter UK VAT Number")
       .post(fullUrl + "/ukVatNumber")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "GB123456789")
+      .formParam("value", "GB" + generateVatNumber)
       .check(status.in(200,303))
   }
 
@@ -306,11 +312,11 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
       
-  def postWebsite(index: Int) =
+  def postWebsite(index: Int, website: String) =
     http(s"Enter website $index")
       .post(fullUrl + s"/website/$index")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", s"www.example.com/$index")
+      .formParam("value", website)
       .check(status.in(303))
 
   def getAddWebsite =
