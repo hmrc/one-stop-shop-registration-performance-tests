@@ -64,12 +64,16 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("authorityId", "")
       .formParam("gatewayToken", "")
-      .formParam("credentialStrength", "weak")
+      .formParam("credentialStrength", "strong")
       .formParam("confidenceLevel", "50")
-      .formParam("affinityGroup", "Individual")
+      .formParam("affinityGroup", "Organisation")
       .formParam("email", "user@test.com")
       .formParam("credentialRole", "User")
       .formParam("redirectionUrl", fullUrl + "/registeredCompanyName")
+      .formParam("enrolment[0].name", "HMRC-MTD-VAT")
+      .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[0].taxIdentifier[0].value", "123456789") // TODO: Needs to be fed
+      .formParam("enrolment[0].state", "Activated")
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
   }
