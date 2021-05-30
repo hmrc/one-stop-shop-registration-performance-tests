@@ -78,6 +78,22 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
   }
 
+  def getCheckVatDetails = {
+    http("Get Check VAT Details page")
+      .get(fullUrl + "/checkVatDetails")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postCheckVatDetails = {
+    http("Enter Check VAT Details")
+      .post(fullUrl + "/checkVatDetails")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
+      .check(status.in(200,303))
+  }
+
   def getRegisteredCompanyName = {
     http("Get Registered Company Name page")
       .get(fullUrl + "/registeredCompanyName")
@@ -252,6 +268,72 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + s"/euVatNumber/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "ES852369")
+      .check(status.in(200,303))
+  }
+
+  def getHasFixedEstablishment(index: Int) = {
+    http("Get Has Fixed Establishment page")
+      .get(fullUrl + s"/hasFixedEstablishment/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postHasFixedEstablishment(index: Int, value: Boolean) = {
+    http("Answer Has Fixed Establishment")
+      .post(fullUrl + s"/hasFixedEstablishment/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", value)
+      .check(status.in(200,303))
+  }
+
+  def getFixedEstablishmentTradingName(index: Int) = {
+    http("Get Fixed Establishment Trading Name page")
+      .get(fullUrl + s"/fixedEstablishmentTradingName/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postFixedEstablishmentTradingName(index: Int) = {
+    http("Enter Fixed Establishment Trading Name")
+      .post(fullUrl + s"/fixedEstablishmentTradingName/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "foo")
+      .check(status.in(200,303))
+  }
+
+  def getFixedEstablishmentAddress(index: Int) = {
+    http("Get Fixed Establishment Address page")
+      .get(fullUrl + s"/fixedEstablishmentAddress/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postFixedEstablishmentAddress(index: Int) = {
+    http("Enter Fixed Establishment Address")
+      .post(fullUrl + s"/fixedEstablishmentAddress/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("line1", "line1")
+      .formParam("line2", "line2")
+      .formParam("townOrCity", "townOrCity")
+      .formParam("postCode", "ABC")
+      .check(status.in(200,303))
+  }
+
+  def getCheckEuVatDetails(index: Int) = {
+    http("Get Check EU VAT Details page")
+      .get(fullUrl + s"/checkEuVatDetails/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postCheckEuVatDetails(index: Int) = {
+    http("Submit Check EU VAT Details")
+      .post(fullUrl + s"/checkEuVatDetails/$index")
+      .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200,303))
   }
 
