@@ -26,6 +26,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postIsBusinessBasedInNorthernIreland,
     goToAuthLoginPage,
     upFrontAuthLogin,
+    getCheckVatDetails,
+    postCheckVatDetails,
     getRegisteredCompanyName,
     postRegisteredCompanyName,
     getHasTradingName,
@@ -52,12 +54,24 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postVatRegisteredInEuMemberState(1, "ES"),
     getEuVatNumber(1),
     postEuVatNumber(1),
+    getHasFixedEstablishment(1),
+    postHasFixedEstablishment(1, true),
+    getFixedEstablishmentTradingName(1),
+    postFixedEstablishmentTradingName(1),
+    getFixedEstablishmentAddress(1),
+    postFixedEstablishmentAddress(1),
+    getCheckEuVatDetails(1),
+    postCheckEuVatDetails(1),
     getAddAdditionalEuVatDetails,
     postAddAdditionalEuVatDetails(true),
     getVatRegisteredInEuMemberState(2),
     postVatRegisteredInEuMemberState(2, "FR"),
     getEuVatNumber(2),
     postEuVatNumber(2),
+    getHasFixedEstablishment(2),
+    postHasFixedEstablishment(2, false),
+    getCheckEuVatDetails(1),
+    postCheckEuVatDetails(1),
     getAddAdditionalEuVatDetails,
     postAddAdditionalEuVatDetails(false),
     getStartDate,
@@ -76,7 +90,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postBusinessContactDetails,
     getCheckYourAnswers,
     postCheckYourAnswers,
-    getApplicationComplete)
+    getApplicationComplete
+  )
 
   runSimulation()
 }
