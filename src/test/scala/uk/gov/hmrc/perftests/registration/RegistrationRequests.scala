@@ -173,22 +173,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getUkVatNumber = {
-    http("Get UK VAT Number page")
-      .get(fullUrl + "/ukVatNumber")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-  }
-
-  def postUkVatNumber = {
-    http("Enter UK VAT Number")
-      .post(fullUrl + "/ukVatNumber")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "GB" + generateVatNumber)
-      .check(status.in(200,303))
-  }
-
   def getUkVatEffectiveDate = {
     http("Get UK VAT Effective Date page")
       .get(fullUrl + "/ukVatEffectiveDate")
