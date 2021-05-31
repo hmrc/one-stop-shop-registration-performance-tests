@@ -321,17 +321,47 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getAddAdditionalEuVatDetails = {
-    http("Get Add Additional EU VAT Details page")
+  def getAddEuVatDetails = {
+    http("Get Add EU VAT Details page")
       .get(fullUrl + "/addAdditionalEuVatDetails")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postAddAdditionalEuVatDetails(answer: Boolean) = {
-    http("Answer Add Additional EU VAT Details")
+  def postAddEuVatDetails(answer: Boolean) = {
+    http("Answer Add EU VAT Details")
       .post(fullUrl + "/addAdditionalEuVatDetails")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
+  }
+
+  def getCurrentlyRegisteredInEu =
+    http("Get Currently Registered in EU page")
+      .get(fullUrl + "/currentlyRegisteredInEu")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postCurrentlyRegisteredInEu(answer: Boolean) = {
+    http("Answer Currently Registered in EU")
+      .post(fullUrl + "/currentlyRegisteredInEu")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
+  }
+
+  def getCurrentCountryOfRegistration =
+    http("Get Current Country of Registration page")
+      .get(fullUrl + "/currentCountryOfRegistration")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postCurrentCountryOfRegistration(answer: String) = {
+    http("Answer Currently Registered in EU")
+      .post(fullUrl + "/currentCountryOfRegistration")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
