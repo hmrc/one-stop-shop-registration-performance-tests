@@ -367,6 +367,64 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
+  def getPreviouslyRegistered =
+    http("Get Previously Registered page")
+      .get(fullUrl + "/previouslyRegistered")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviouslyRegistered(answer: Boolean) =
+    http("Answer Previously Registered")
+      .post(fullUrl + "/previouslyRegistered")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
+
+  def getPreviousEuCountry(index: Int) = {
+    http("Get Previous EU Country page")
+      .get(fullUrl + s"/previousEuCountry/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postPreviousEuCountry(index: Int, countryCode: String) =
+    http("Enter Previous EU Country")
+      .post(fullUrl + s"/previousEuCountry/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", countryCode)
+      .check(status.in(200,303))
+
+  def getPreviousEuVatNumber(index: Int) = {
+    http("Get Previous EU VAT Number page")
+      .get(fullUrl + s"/previousEuVatNumber/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postPreviousEuVatNumber(index: Int, answer: String) =
+    http("Enter Previous EU VAT Number")
+      .post(fullUrl + s"/previousEuVatNumber/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
+
+  def getAddPreviousRegistration =
+    http("Get Add Previous Registration page")
+      .get(fullUrl + "/addPreviousRegistration")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAddPreviousRegistration(answer: Boolean) =
+    http("Add Previous Registration")
+      .post(fullUrl + "/addPreviousRegistration")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200,303))
+
   def getStartDate =
     http("Get Start Date page")
       .get(fullUrl + "/startDate")
@@ -416,14 +474,14 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
 
   def getAddWebsite =
-    http("Get Add Trading Name page")
+    http("Get Add Website page")
       .get(fullUrl + "/addWebsite")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postAddWebsite(answer: Boolean) =
-    http("Add Trading Name")
+    http("Add Website")
       .post(fullUrl + "/addWebsite")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
