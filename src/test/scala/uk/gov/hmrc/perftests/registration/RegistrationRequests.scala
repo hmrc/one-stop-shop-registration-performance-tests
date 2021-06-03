@@ -31,11 +31,6 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
-  def generateVatNumber(): Int = {
-      val vatNumber = scala.util.Random
-      vatNumber.nextInt(999999999)
-  }
-
   def getIsBusinessBasedInNorthernIreland = {
     http("Get Is Business Based in Northern Ireland page")
       .get(fullUrl + "/isBusinessBasedInNorthernIreland")
@@ -72,7 +67,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("redirectionUrl", fullUrl + "/registeredCompanyName")
       .formParam("enrolment[0].name", "HMRC-MTD-VAT")
       .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
-      .formParam("enrolment[0].taxIdentifier[0].value", "123456789") // TODO: Needs to be fed
+      .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
       .formParam("enrolment[0].state", "Activated")
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
