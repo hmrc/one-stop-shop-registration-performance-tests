@@ -186,22 +186,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getUkVatRegisteredPostcode = {
-    http("Get UK VAT Registered Postcode page")
-      .get(fullUrl + "/ukVatRegisteredPostcode")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-  }
-
-  def postUkVatRegisteredPostcode = {
-    http("Enter UK VAT Registered Postcode")
-      .post(fullUrl + "/ukVatRegisteredPostcode")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "AA1 1ZZ")
-      .check(status.in(200,303))
-  }
-
   def getIsVatRegisteredInEu = {
     http("Get Is VAT Registered in EU page")
       .get(fullUrl + "/vatRegisteredInEu")

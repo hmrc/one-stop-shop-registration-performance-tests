@@ -44,8 +44,6 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postPartOfVatGroup,
     getUkVatEffectiveDate,
     postUkVatEffectiveDate,
-    getUkVatRegisteredPostcode,
-    postUkVatRegisteredPostcode,
     getIsVatRegisteredInEu,
     postIsVatRegisteredInEu,
     getVatRegisteredInEuMemberState(1),
