@@ -31,18 +31,33 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
-  def getIsBusinessBasedInNorthernIreland = {
-    http("Get Is Business Based in Northern Ireland page")
-      .get(fullUrl + "/isBusinessBasedInNorthernIreland")
+  def getSellsGoodsFromNi = {
+    http("Get Sells Goods from NI page")
+      .get(fullUrl + "/sellsGoodsFromNi")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postIsBusinessBasedInNorthernIreland = {
-    http("Post Is Business Based in Northern Ireland")
-      .post(fullUrl + "/isBusinessBasedInNorthernIreland")
+  def postSellsGoodsFromNi = {
+    http("Post Sells Goods From NI")
+      .post(fullUrl + "/sellsGoodsFromNi")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "true")
+      .formParam("value", true)
+      .check(status.in(303))
+  }
+
+  def getInControlOfMovingGoods = {
+    http("Get In Control of Moving Goods page")
+      .get(fullUrl + "/inControlOfMovingGoods")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postInControlOfMovingGoods = {
+    http("Post In Control of Moving Goods")
+      .post(fullUrl + "/inControlOfMovingGoods")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
       .check(status.in(303))
   }
 
@@ -64,7 +79,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("affinityGroup", "Organisation")
       .formParam("email", "user@test.com")
       .formParam("credentialRole", "User")
-      .formParam("redirectionUrl", fullUrl + "/registeredCompanyName")
+      .formParam("redirectionUrl", fullUrl)
       .formParam("enrolment[0].name", "HMRC-MTD-VAT")
       .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
       .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
@@ -72,6 +87,11 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
   }
+
+  def startJourney =
+    http("Start journey")
+      .get(fullUrl)
+      .check(status.in(303))
 
   def getCheckVatDetails = {
     http("Get Check VAT Details page")
@@ -85,7 +105,7 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Enter Check VAT Details")
       .post(fullUrl + "/checkVatDetails")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", true)
+      .formParam("value", "yes")
       .check(status.in(200,303))
   }
 
@@ -186,17 +206,17 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getIsVatRegisteredInEu = {
-    http("Get Is VAT Registered in EU page")
-      .get(fullUrl + "/vatRegisteredInEu")
+  def getIsTaxRegisteredInEu = {
+    http("Get Is Tax Registered in EU page")
+      .get(fullUrl + "/taxRegisteredInEu")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postIsVatRegisteredInEu = {
-    http("Answer Is VAT Registered in EU")
-      .post(fullUrl + "/vatRegisteredInEu")
+  def postIsTaxRegisteredInEu = {
+    http("Answer Is Tax Registered in EU")
+      .post(fullUrl + "/taxRegisteredInEu")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200,303))
@@ -215,6 +235,22 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + s"/vatRegisteredEuMemberState/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", countryCode)
+      .check(status.in(200,303))
+  }
+
+  def getVatRegistered(index: Int) = {
+    http("Get VAT Registered page")
+      .get(fullUrl + s"/vatRegisteredInEu/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postVatRegistered(index: Int, answer: Boolean) = {
+    http("Answer Vat Registered")
+      .post(fullUrl + s"/vatRegisteredInEu/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
       .check(status.in(200,303))
   }
 
@@ -256,6 +292,22 @@ object RegistrationRequests extends ServicesConfiguration {
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
+  }
+
+  def getEuTaxReference(index: Int) = {
+    http("Get EU Tax Reference page")
+      .get(fullUrl + s"/euTaxReference/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postEuTaxReference(index: Int) = {
+    http("Enter EU Tax Reference")
+      .post(fullUrl + s"/euTaxReference/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "123456789")
+      .check(status.in(200,303))
   }
 
   def postFixedEstablishmentTradingName(index: Int) = {
@@ -437,6 +489,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("postCode", "AM1 1AM")
       .check(status.in(200,303))
   }
+
+  def getHasWebsite() =
+    http(s"Get Has Website page")
+      .get(fullUrl + s"/hasWebsite")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postHasWebsite(answer: Boolean) =
+    http(s"Answer has website")
+      .post(fullUrl + s"/hasWebsite")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(303))
+
   
   def getWebsite(index: Int) =
     http(s"Get Website page $index")
@@ -481,6 +548,24 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("fullName", "Jane Smith")
       .formParam("telephoneNumber", "01478523691")
       .formParam("emailAddress", "jane@email.com")
+      .check(status.in(200,303))
+  }
+
+  def getBankDetails = {
+    http("Get Bank Details page")
+      .get(fullUrl + "/bankDetails")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postBankDetails = {
+    http("Enter Bank Details")
+      .post(fullUrl + "/bankDetails")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("accountName", "Account name")
+      .formParam("bic", "GBX12345678")
+      .formParam("iban", "GB123456789")
       .check(status.in(200,303))
   }
 
