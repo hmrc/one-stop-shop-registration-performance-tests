@@ -33,14 +33,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getSellsGoodsFromNi = {
     http("Get Sells Goods from NI page")
-      .get(fullUrl + "/sellsGoodsFromNi")
+      .get(fullUrl + "/sell-online")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
   def postSellsGoodsFromNi = {
     http("Post Sells Goods From NI")
-      .post(fullUrl + "/sellsGoodsFromNi")
+      .post(fullUrl + "/sell-online")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
@@ -48,14 +48,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getInControlOfMovingGoods = {
     http("Get In Control of Moving Goods page")
-      .get(fullUrl + "/inControlOfMovingGoods")
+      .get(fullUrl + "/move-goods")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
   def postInControlOfMovingGoods = {
     http("Post In Control of Moving Goods")
-      .post(fullUrl + "/inControlOfMovingGoods")
+      .post(fullUrl + "/move-goods")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
@@ -95,7 +95,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getCheckVatDetails = {
     http("Get Check VAT Details page")
-      .get(fullUrl + "/checkVatDetails")
+      .get(fullUrl + "/confirm-vat-details")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -103,7 +103,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postCheckVatDetails = {
     http("Enter Check VAT Details")
-      .post(fullUrl + "/checkVatDetails")
+      .post(fullUrl + "/confirm-vat-details")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "yes")
       .check(status.in(200,303))
@@ -127,7 +127,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getHasTradingName = {
     http("Get Has Trading Name page")
-      .get(fullUrl + "/hasTradingName")
+      .get(fullUrl + "/have-uk-trading-name")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -135,7 +135,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postHasTradingName = {
     http("Answer Has Trading Name")
-      .post(fullUrl + "/hasTradingName")
+      .post(fullUrl + "/have-uk-trading-name")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200,303))
@@ -143,7 +143,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getTradingName(index: Int) = {
     http("Get Trading Name page")
-      .get(fullUrl + s"/tradingName/$index")
+      .get(fullUrl + s"/uk-trading-name/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -151,7 +151,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postTradingName(index: Int, tradingName: String) = {
     http("Enter Trading Name")
-      .post(fullUrl + s"/tradingName/$index")
+      .post(fullUrl + s"/uk-trading-name/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", tradingName)
       .check(status.in(200,303))
@@ -159,14 +159,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getAddTradingName =
     http("Get Add Trading Name page")
-      .get(fullUrl + "/addTradingName")
+      .get(fullUrl + "/add-uk-trading-name")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postAddTradingName(answer: Boolean) = {
     http("Add Trading Name")
-      .post(fullUrl + "/addTradingName")
+      .post(fullUrl + "/add-uk-trading-name")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
@@ -208,7 +208,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getIsTaxRegisteredInEu = {
     http("Get Is Tax Registered in EU page")
-      .get(fullUrl + "/taxRegisteredInEu")
+      .get(fullUrl + "/tax-in-eu")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -216,7 +216,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postIsTaxRegisteredInEu = {
     http("Answer Is Tax Registered in EU")
-      .post(fullUrl + "/taxRegisteredInEu")
+      .post(fullUrl + "/tax-in-eu")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200,303))
@@ -224,7 +224,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getVatRegisteredInEuMemberState(index: Int) = {
     http("Get VAT Registered in EU Member State page")
-      .get(fullUrl + s"/vatRegisteredEuMemberState/$index")
+      .get(fullUrl + s"/eu-tax/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -232,7 +232,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postVatRegisteredInEuMemberState(index: Int, countryCode: String) = {
     http("Enter VAT Registered in EU Member State")
-      .post(fullUrl + s"/vatRegisteredEuMemberState/$index")
+      .post(fullUrl + s"/eu-tax/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", countryCode)
       .check(status.in(200,303))
@@ -240,7 +240,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getVatRegistered(index: Int) = {
     http("Get VAT Registered page")
-      .get(fullUrl + s"/vatRegisteredInEu/$index")
+      .get(fullUrl + s"/eu-vat/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -248,7 +248,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postVatRegistered(index: Int, answer: Boolean) = {
     http("Answer Vat Registered")
-      .post(fullUrl + s"/vatRegisteredInEu/$index")
+      .post(fullUrl + s"/eu-vat/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
@@ -256,7 +256,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getEuVatNumber(index: Int) = {
     http("Get EU VAT Number page")
-      .get(fullUrl + s"/euVatNumber/$index")
+      .get(fullUrl + s"/eu-vat-number/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -264,7 +264,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postEuVatNumber(index: Int) = {
     http("Enter EU VAT Number")
-      .post(fullUrl + s"/euVatNumber/$index")
+      .post(fullUrl + s"/eu-vat-number/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "ES852369")
       .check(status.in(200,303))
@@ -272,7 +272,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getHasFixedEstablishment(index: Int) = {
     http("Get Has Fixed Establishment page")
-      .get(fullUrl + s"/hasFixedEstablishment/$index")
+      .get(fullUrl + s"/eu-fixed-establishment/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -280,7 +280,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postHasFixedEstablishment(index: Int, value: Boolean) = {
     http("Answer Has Fixed Establishment")
-      .post(fullUrl + s"/hasFixedEstablishment/$index")
+      .post(fullUrl + s"/eu-fixed-establishment/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", value)
       .check(status.in(200,303))
@@ -288,7 +288,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getFixedEstablishmentTradingName(index: Int) = {
     http("Get Fixed Establishment Trading Name page")
-      .get(fullUrl + s"/fixedEstablishmentTradingName/$index")
+      .get(fullUrl + s"/eu-trading-name/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -312,7 +312,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postFixedEstablishmentTradingName(index: Int) = {
     http("Enter Fixed Establishment Trading Name")
-      .post(fullUrl + s"/fixedEstablishmentTradingName/$index")
+      .post(fullUrl + s"/eu-trading-name/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "foo")
       .check(status.in(200,303))
@@ -320,7 +320,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getFixedEstablishmentAddress(index: Int) = {
     http("Get Fixed Establishment Address page")
-      .get(fullUrl + s"/fixedEstablishmentAddress/$index")
+      .get(fullUrl + s"/eu-fixed-establishment-address/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -328,7 +328,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postFixedEstablishmentAddress(index: Int) = {
     http("Enter Fixed Establishment Address")
-      .post(fullUrl + s"/fixedEstablishmentAddress/$index")
+      .post(fullUrl + s"/eu-fixed-establishment-address/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("line1", "line1")
       .formParam("line2", "line2")
@@ -339,7 +339,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getCheckEuVatDetails(index: Int) = {
     http("Get Check EU VAT Details page")
-      .get(fullUrl + s"/checkEuVatDetails/$index")
+      .get(fullUrl + s"/check-tax-details/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -347,14 +347,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postCheckEuVatDetails(index: Int) = {
     http("Submit Check EU VAT Details")
-      .post(fullUrl + s"/checkEuVatDetails/$index")
+      .post(fullUrl + s"/check-tax-details/$index")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200,303))
   }
 
   def getAddEuVatDetails = {
     http("Get Add EU VAT Details page")
-      .get(fullUrl + "/addAdditionalEuVatDetails")
+      .get(fullUrl + "/add-tax-details")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -362,7 +362,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postAddEuVatDetails(answer: Boolean) = {
     http("Answer Add EU VAT Details")
-      .post(fullUrl + "/addAdditionalEuVatDetails")
+      .post(fullUrl + "/add-tax-details")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
@@ -370,14 +370,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getCurrentlyRegisteredInEu =
     http("Get Currently Registered in EU page")
-      .get(fullUrl + "/currentlyRegisteredInEu")
+      .get(fullUrl + "/already-eu-registered")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postCurrentlyRegisteredInEu(answer: Boolean) = {
     http("Answer Currently Registered in EU")
-      .post(fullUrl + "/currentlyRegisteredInEu")
+      .post(fullUrl + "/already-eu-registered")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
@@ -385,14 +385,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getCurrentCountryOfRegistration =
     http("Get Current Country of Registration page")
-      .get(fullUrl + "/currentCountryOfRegistration")
+      .get(fullUrl + "/already-registered-which-country")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postCurrentCountryOfRegistration(answer: String) = {
     http("Answer Currently Registered in EU")
-      .post(fullUrl + "/currentCountryOfRegistration")
+      .post(fullUrl + "/already-registered-which-country")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
@@ -400,21 +400,21 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getPreviouslyRegistered =
     http("Get Previously Registered page")
-      .get(fullUrl + "/previouslyRegistered")
+      .get(fullUrl + "/deregistered")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postPreviouslyRegistered(answer: Boolean) =
     http("Answer Previously Registered")
-      .post(fullUrl + "/previouslyRegistered")
+      .post(fullUrl + "/deregistered")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
 
   def getPreviousEuCountry(index: Int) = {
     http("Get Previous EU Country page")
-      .get(fullUrl + s"/previousEuCountry/$index")
+      .get(fullUrl + s"/deregistered-country/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -422,14 +422,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postPreviousEuCountry(index: Int, countryCode: String) =
     http("Enter Previous EU Country")
-      .post(fullUrl + s"/previousEuCountry/$index")
+      .post(fullUrl + s"/deregistered-country/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", countryCode)
       .check(status.in(200,303))
 
   def getPreviousEuVatNumber(index: Int) = {
     http("Get Previous EU VAT Number page")
-      .get(fullUrl + s"/previousEuVatNumber/$index")
+      .get(fullUrl + s"/deregistered-eu-vat-number/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -437,35 +437,35 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postPreviousEuVatNumber(index: Int, answer: String) =
     http("Enter Previous EU VAT Number")
-      .post(fullUrl + s"/previousEuVatNumber/$index")
+      .post(fullUrl + s"/deregistered-eu-vat-number/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
 
   def getAddPreviousRegistration =
     http("Get Add Previous Registration page")
-      .get(fullUrl + "/addPreviousRegistration")
+      .get(fullUrl + "/add-deregistration")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postAddPreviousRegistration(answer: Boolean) =
     http("Add Previous Registration")
-      .post(fullUrl + "/addPreviousRegistration")
+      .post(fullUrl + "/add-deregistration")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
 
   def getStartDate =
     http("Get Start Date page")
-      .get(fullUrl + "/startDate")
+      .get(fullUrl + "/start-date")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postStartDate =
     http("Answer start date")
-      .post(fullUrl + "/startDate")
+      .post(fullUrl + "/start-date")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("choice", "nextPeriod")
       .check(status.in(303))
@@ -492,14 +492,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getHasWebsite() =
     http(s"Get Has Website page")
-      .get(fullUrl + s"/hasWebsite")
+      .get(fullUrl + s"/give-website-address")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postHasWebsite(answer: Boolean) =
     http(s"Answer has website")
-      .post(fullUrl + s"/hasWebsite")
+      .post(fullUrl + s"/give-website-address")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(303))
@@ -507,35 +507,35 @@ object RegistrationRequests extends ServicesConfiguration {
   
   def getWebsite(index: Int) =
     http(s"Get Website page $index")
-      .get(fullUrl + s"/website/$index")
+      .get(fullUrl + s"/website-address/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
       
   def postWebsite(index: Int, website: String) =
     http(s"Enter website $index")
-      .post(fullUrl + s"/website/$index")
+      .post(fullUrl + s"/website-address/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", website)
       .check(status.in(303))
 
   def getAddWebsite =
     http("Get Add Website page")
-      .get(fullUrl + "/addWebsite")
+      .get(fullUrl + "/add-website-address")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postAddWebsite(answer: Boolean) =
     http("Add Website")
-      .post(fullUrl + "/addWebsite")
+      .post(fullUrl + "/add-website-address")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
 
   def getBusinessContactDetails = {
     http("Get Business Contact Details page")
-      .get(fullUrl + "/businessContactDetails")
+      .get(fullUrl + "/business-contact-details")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -543,7 +543,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postBusinessContactDetails = {
     http("Enter Business Contact Details")
-      .post(fullUrl + "/businessContactDetails")
+      .post(fullUrl + "/business-contact-details")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("fullName", "Jane Smith")
       .formParam("telephoneNumber", "01478523691")
@@ -553,7 +553,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getBankDetails = {
     http("Get Bank Details page")
-      .get(fullUrl + "/bankDetails")
+      .get(fullUrl + "/bank-details")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -561,7 +561,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postBankDetails = {
     http("Enter Bank Details")
-      .post(fullUrl + "/bankDetails")
+      .post(fullUrl + "/bank-details")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("accountName", "Account name")
       .formParam("bic", "GBX12345678")
@@ -571,7 +571,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getCheckYourAnswers = {
     http("Get Check Your Answers page")
-      .get(fullUrl + "/check-your-answers")
+      .get(fullUrl + "/check-answers")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
@@ -579,14 +579,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postCheckYourAnswers = {
     http("Post Check Your Answers page")
-      .post(fullUrl + "/check-your-answers")
+      .post(fullUrl + "/check-answers")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200,303))
   }
 
   def getApplicationComplete = {
     http("Get Application Complete page")
-      .get(fullUrl + "/applicationComplete")
+      .get(fullUrl + "/successful")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(status.in(200))
   }

@@ -63,6 +63,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postVatRegisteredInEuMemberState(2, "FR"),
     getVatRegistered(2),
     postVatRegistered(2, true),
+    getEuVatNumber(2),
+    postEuVatNumber(2),
     getHasFixedEstablishment(2),
     postHasFixedEstablishment(2, false),
     getCheckEuVatDetails(2),
