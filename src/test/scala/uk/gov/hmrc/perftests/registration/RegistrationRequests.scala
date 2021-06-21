@@ -24,7 +24,7 @@ import uk.gov.hmrc.performance.conf.ServicesConfiguration
 object RegistrationRequests extends ServicesConfiguration {
 
   val baseUrl: String = baseUrlFor("one-stop-shop-registration-frontend")
-  val ossUrl: String = "/pay-vat-on-goods-sold-online-to-eu/northern-ireland-register"
+  val ossUrl: String = "/pay-vat-on-goods-sold-to-eu/northern-ireland-register"
   val fullUrl: String = baseUrl + ossUrl
 
   val loginUrl = baseUrlFor("auth-login-stub")
