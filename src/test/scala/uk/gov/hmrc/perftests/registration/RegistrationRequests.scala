@@ -77,8 +77,7 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Get Sells Goods from NI page")
       .get(fullUrl + "/sell-online")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-//      .check(status.in(200))
-      .check(status.in(200,303))
+      .check(status.in(200))
   }
 
   def postSellsGoodsFromNi = {
