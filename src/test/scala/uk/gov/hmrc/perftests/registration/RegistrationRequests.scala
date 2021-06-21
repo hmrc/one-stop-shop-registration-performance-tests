@@ -31,11 +31,54 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
+  def goToAuthLoginPage = {
+    http("Go to Auth login page")
+      .get(loginUrl + s"/auth-login-stub/gg-sign-in")
+      .check(status.in(200, 303))
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+  }
+
+  def upFrontAuthLogin = {
+    http("Enter Auth login credentials ")
+      .post(loginUrl + s"/auth-login-stub/gg-sign-in")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("authorityId", "")
+      .formParam("gatewayToken", "")
+      .formParam("credentialStrength", "strong")
+      .formParam("confidenceLevel", "50")
+      .formParam("affinityGroup", "Organisation")
+      .formParam("email", "user@test.com")
+      .formParam("credentialRole", "User")
+      .formParam("redirectionUrl", fullUrl + "/on-sign-in")
+      .formParam("enrolment[0].name", "HMRC-MTD-VAT")
+      .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
+      .formParam("enrolment[0].state", "Activated")
+      .check(status.in(200, 303))
+      .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
+  }
+
+  def getAlreadyRegistered = {
+    http("Get Already Registered in EU page")
+      .get(fullUrl + "/already-eu-registered")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postAlreadyRegistered = {
+    http("Post Already Registered in EU pagte")
+      .post(fullUrl + "/already-eu-registered")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", false)
+      .check(status.in(303))
+  }
+
   def getSellsGoodsFromNi = {
     http("Get Sells Goods from NI page")
       .get(fullUrl + "/sell-online")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
+//      .check(status.in(200))
+      .check(status.in(200,303))
   }
 
   def postSellsGoodsFromNi = {
@@ -61,36 +104,53 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
   }
 
-  def goToAuthLoginPage = {
-    http("Go to Auth login page")
-      .get(loginUrl + s"/auth-login-stub/gg-sign-in")
-      .check(status.in(200, 303))
+  def getAlreadyMadeSales = {
+    http("Get Already Made Sales page")
+      .get(fullUrl + "/alreadyMadeSales")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
   }
 
-  def upFrontAuthLogin = {
-    http("Enter Auth login credentials ")
-      .post(loginUrl + s"/auth-login-stub/gg-sign-in")
+  def postAlreadyMadeSales = {
+    http("Post Already Made Sales")
+      .post(fullUrl + "/alreadyMadeSales")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("authorityId", "")
-      .formParam("gatewayToken", "")
-      .formParam("credentialStrength", "strong")
-      .formParam("confidenceLevel", "50")
-      .formParam("affinityGroup", "Organisation")
-      .formParam("email", "user@test.com")
-      .formParam("credentialRole", "User")
-      .formParam("redirectionUrl", fullUrl)
-      .formParam("enrolment[0].name", "HMRC-MTD-VAT")
-      .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
-      .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
-      .formParam("enrolment[0].state", "Activated")
-      .check(status.in(200, 303))
-      .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
+      .formParam("answer", false)
+      .check(status.in(303))
   }
 
-  def startJourney =
-    http("Start journey")
-      .get(fullUrl)
+  def getIntendToSellGoodsThisQuarter = {
+    http("Get Intend To Sell Goods This Quarter page")
+      .get(fullUrl + "/intendToSellGoodsThisQuarter")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postIntendToSellGoodsThisQuarter = {
+    http("Post Intend To Sell Goods This Quarter")
+      .post(fullUrl + "/intendToSellGoodsThisQuarter")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
+      .check(status.in(303))
+  }
+
+  def getCommencementDate = {
+    http("Get Commencement Date page")
+      .get(fullUrl + "/commencementDate")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postCommencementDate = {
+    http("Post Commencement Date")
+      .post(fullUrl + "/commencementDate")
+      .formParam("csrfToken", "${csrfToken}")
+      .check(status.in(303))
+  }
+
+  def resumeJourney =
+    http("Resume journey")
+      .get(fullUrl + "/on-sign-in")
       .check(status.in(303))
 
   def getCheckVatDetails = {
@@ -368,36 +428,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getCurrentlyRegisteredInEu =
-    http("Get Currently Registered in EU page")
-      .get(fullUrl + "/already-eu-registered")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def postCurrentlyRegisteredInEu(answer: Boolean) = {
-    http("Answer Currently Registered in EU")
-      .post(fullUrl + "/already-eu-registered")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", answer)
-      .check(status.in(200,303))
-  }
-
-  def getCurrentCountryOfRegistration =
-    http("Get Current Country of Registration page")
-      .get(fullUrl + "/already-registered-which-country")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def postCurrentCountryOfRegistration(answer: String) = {
-    http("Answer Currently Registered in EU")
-      .post(fullUrl + "/already-registered-which-country")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", answer)
-      .check(status.in(200,303))
-  }
-
   def getPreviouslyRegistered =
     http("Get Previously Registered page")
       .get(fullUrl + "/deregistered")
@@ -455,20 +485,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200,303))
-
-  def getStartDate =
-    http("Get Start Date page")
-      .get(fullUrl + "/start-date")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def postStartDate =
-    http("Answer start date")
-      .post(fullUrl + "/start-date")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("choice", "nextPeriod")
-      .check(status.in(303))
 
   def getBusinessAddress = {
     http("Get Business Address page")
@@ -564,8 +580,8 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + "/bank-details")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("accountName", "Account name")
-      .formParam("bic", "GBX12345678")
-      .formParam("iban", "GB123456789")
+      .formParam("bic", "ABCDEF2A")
+      .formParam("iban", "GB33BUKB20201555555555")
       .check(status.in(200,303))
   }
 
