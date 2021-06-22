@@ -601,7 +601,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getApplicationComplete = {
     http("Get Application Complete page")
-      .get(fullUrl + "/successful?showEmailConfirmation=true")
+      .get(fullUrl + "/successful")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(status.in(200))
   }
