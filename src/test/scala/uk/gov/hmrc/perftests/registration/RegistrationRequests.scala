@@ -75,14 +75,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getSellsGoodsFromNi = {
     http("Get Sells Goods from NI page")
-      .get(fullUrl + "/sell-online")
+      .get(fullUrl + "/sell-from-northern-ireland")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
   def postSellsGoodsFromNi = {
     http("Post Sells Goods From NI")
-      .post(fullUrl + "/sell-online")
+      .post(fullUrl + "/sell-from-northern-ireland")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
@@ -133,16 +133,16 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
   }
 
-  def getCommencementDate = {
+  def getStartDate = {
     http("Get Commencement Date page")
-      .get(fullUrl + "/commencementDate")
+      .get(fullUrl + "/start-date")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postCommencementDate = {
+  def postStartDate = {
     http("Post Commencement Date")
-      .post(fullUrl + "/commencementDate")
+      .post(fullUrl + "/start-date")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(303))
   }
@@ -228,40 +228,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + "/add-uk-trading-name")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
-      .check(status.in(200,303))
-  }
-
-  def getPartOfVatGroup = {
-    http("Get Part of VAT Group page")
-      .get(fullUrl + "/partOfVatGroup")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-  }
-
-  def postPartOfVatGroup = {
-    http("Answer Part of VAT group")
-      .post(fullUrl + "/partOfVatGroup")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "true")
-      .check(status.in(200,303))
-  }
-
-  def getUkVatEffectiveDate = {
-    http("Get UK VAT Effective Date page")
-      .get(fullUrl + "/ukVatEffectiveDate")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-  }
-
-  def postUkVatEffectiveDate = {
-    http("Enter UK VAT Effective Date")
-      .post(fullUrl + "/ukVatEffectiveDate")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value.day", "15")
-      .formParam("value.month", "05")
-      .formParam("value.year", "2017")
       .check(status.in(200,303))
   }
 
@@ -519,7 +485,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", answer)
       .check(status.in(303))
 
-  
+  def getIsOnlineMarketplace() =
+    http(s"Get Is Online Marketplace page")
+      .get(fullUrl + s"/online-marketplace")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postIsOnlineMarketplace() =
+    http(s"Answer Is Online Marketplace")
+      .post(fullUrl + s"/online-marketplace")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", false)
+      .check(status.in(303))
+
   def getWebsite(index: Int) =
     http(s"Get Website page $index")
       .get(fullUrl + s"/website-address/$index")
