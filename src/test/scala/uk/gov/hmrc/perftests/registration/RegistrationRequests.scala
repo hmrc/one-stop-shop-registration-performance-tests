@@ -88,46 +88,16 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
   }
 
-  def getInControlOfMovingGoods = {
-    http("Get In Control of Moving Goods page")
-      .get(fullUrl + "/move-goods")
+  def getBusinessBasedInNi = {
+    http("Get Business Based in NI page")
+      .get(fullUrl + "/ni-business")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
-  def postInControlOfMovingGoods = {
-    http("Post In Control of Moving Goods")
-      .post(fullUrl + "/move-goods")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", true)
-      .check(status.in(303))
-  }
-
-  def getAlreadyMadeSales = {
-    http("Get Already Made Sales page")
-      .get(fullUrl + "/alreadyMadeSales")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-  }
-
-  def postAlreadyMadeSales = {
-    http("Post Already Made Sales")
-      .post(fullUrl + "/alreadyMadeSales")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("answer", false)
-      .check(status.in(303))
-  }
-
-  def getIntendToSellGoodsThisQuarter = {
-    http("Get Intend To Sell Goods This Quarter page")
-      .get(fullUrl + "/intendToSellGoodsThisQuarter")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-  }
-
-  def postIntendToSellGoodsThisQuarter = {
-    http("Post Intend To Sell Goods This Quarter")
-      .post(fullUrl + "/intendToSellGoodsThisQuarter")
+  def postBusinessBasedInNi = {
+    http("Post Business Based In NI")
+      .post(fullUrl + "/ni-business")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
@@ -471,7 +441,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200,303))
   }
 
-  def getHasWebsite() =
+  def getHasWebsite =
     http(s"Get Has Website page")
       .get(fullUrl + s"/give-website-address")
       .header("Cookie", "mdtp=${mdtpCookie}")
@@ -485,14 +455,14 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", answer)
       .check(status.in(303))
 
-  def getIsOnlineMarketplace() =
+  def getIsOnlineMarketplace =
     http(s"Get Is Online Marketplace page")
       .get(fullUrl + s"/online-marketplace")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postIsOnlineMarketplace() =
+  def postIsOnlineMarketplace =
     http(s"Answer Is Online Marketplace")
       .post(fullUrl + s"/online-marketplace")
       .formParam("csrfToken", "${csrfToken}")
