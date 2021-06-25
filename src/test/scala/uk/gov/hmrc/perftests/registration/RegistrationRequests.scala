@@ -90,14 +90,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getBusinessBasedInNi = {
     http("Get Business Based in NI page")
-      .get(fullUrl + "/ni-business")
+      .get(fullUrl + "/northern-ireland-business")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
   def postBusinessBasedInNi = {
     http("Post Business Based In NI")
-      .post(fullUrl + "/ni-business")
+      .post(fullUrl + "/northern-ireland-business")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
