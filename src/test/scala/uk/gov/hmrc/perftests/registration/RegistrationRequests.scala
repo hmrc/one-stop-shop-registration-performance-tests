@@ -103,6 +103,38 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
   }
 
+  def getAlreadyMadeSales = {
+    http("Get Already Made Sales page")
+      .get(fullUrl + "/already-made-sales")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postAlreadyMadeSales = {
+    http("Post Already Made Sales")
+      .post(fullUrl + "/already-made-sales")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
+      .check(status.in(303))
+  }
+
+  def getDateOfFirstSale = {
+    http("Get DateOf First Sale page")
+      .get(fullUrl + "/date-of-first-sale")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+  }
+
+  def postDateOfFirstSale = {
+    http("Post Date OfFirst Sale")
+      .post(fullUrl + "/date-of-first-sale")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value.day", "01")
+      .formParam("value.month", "07")
+      .formParam("value.year", "2021")
+      .check(status.in(303))
+  }
+
   def getStartDate = {
     http("Get Commencement Date page")
       .get(fullUrl + "/start-date")
