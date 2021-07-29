@@ -119,14 +119,14 @@ object RegistrationRequests extends ServicesConfiguration {
   }
 
   def getDateOfFirstSale = {
-    http("Get DateOf First Sale page")
+    http("Get Date Of First Sale page")
       .get(fullUrl + "/date-of-first-sale")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
   }
 
   def postDateOfFirstSale = {
-    http("Post Date OfFirst Sale")
+    http("Post Date Of First Sale")
       .post(fullUrl + "/date-of-first-sale")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value.day", "01")
