@@ -35,13 +35,11 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Go to Auth login page")
       .get(loginUrl + s"/auth-login-stub/gg-sign-in")
       .check(status.in(200, 303))
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
   }
 
   def upFrontAuthLogin = {
     http("Enter Auth login credentials ")
       .post(loginUrl + s"/auth-login-stub/gg-sign-in")
-      .formParam("csrfToken", "${csrfToken}")
       .formParam("authorityId", "")
       .formParam("gatewayToken", "")
       .formParam("credentialStrength", "strong")
