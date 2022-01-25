@@ -12,6 +12,15 @@ sm --start ONE_STOP_SHOP_ALL -r
 
 ## Running the tests
 
+### Run testOnly version of one-stop-shop-returns from terminal
+
+In order to clear down the performance test registrations prior to each run. We need to use the test-only endpoint in one-stop-shop-registration.
+
+Use "sm --stop ONE_STOP_SHOP_REGISTRATION" and "sm --stop ONE_STOP_SHOP_REGISTRATION_FRONTEND" to stop the 
+registration backend and frontend services in service manager then in the terminal for each service run:
+
+sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
+
 #### Smoke test
 
 It might be useful to try the journey with one user to check that everything works fine before running the full performance test
