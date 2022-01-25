@@ -12,9 +12,10 @@ sm --start ONE_STOP_SHOP_ALL -r
 
 ## Running the tests
 
-### Run testOnly version of one-stop-shop-returns from terminal
+### Run testOnly version of one-stop-shop-registration and one-stop-shop-registration-frontend from terminal
 
-In order to clear down the performance test registrations prior to each run. We need to use the test-only endpoint in one-stop-shop-registration.
+In order to clear down the performance test registrations prior to each run. We need to use the test-only endpoint in the 
+registration services.
 
 Use "sm --stop ONE_STOP_SHOP_REGISTRATION" and "sm --stop ONE_STOP_SHOP_REGISTRATION_FRONTEND" to stop the 
 registration backend and frontend services in service manager then in the terminal for each service run:
@@ -42,6 +43,10 @@ sbt -Dperftest.runSmokeTest=true -DrunLocal=false gatling:test
 #### Run the performance test on staging
 
 To run a full performance test against staging environment, see Jenkins [https://performance.tools.staging.tax.service.gov.uk/job/one-stop-shop-registration-performance-tests/](https://performance.tools.staging.tax.service.gov.uk/job/one-stop-shop-registration-performance-tests/)
+
+##### app-config-staging:
+app-config-staging has been set up to use the testOnly routes so that service manager will run the equivalent of
+"sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes" on staging.
 
 
 ### Scalafmt
