@@ -18,8 +18,16 @@ package uk.gov.hmrc.perftests.registration
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.registration.RegistrationRequests._
+import utility.Client.clearAll
 
 class RegistrationSimulation extends PerformanceTestRunner {
+
+  val baseUrl: String = baseUrlFor("one-stop-shop-registration-frontend")
+
+  before {
+    println("Clearing the performance tests registrations from the database")
+    clearAll(s"$baseUrl/pay-vat-on-goods-sold-to-eu/northern-ireland-register/test-only/delete-accounts")
+  }
 
   setup("registration", "Registration Journey") withRequests (
     getAlreadyRegistered,
@@ -28,6 +36,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postSellsGoodsFromNi,
     getBusinessBasedInNi,
     postBusinessBasedInNi,
+    getBusinessPay,
     goToAuthLoginPage,
     upFrontAuthLogin,
     resumeJourney,

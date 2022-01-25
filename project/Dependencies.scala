@@ -8,6 +8,7 @@ object Dependencies {
     "com.typesafe"          % "config"                    % "1.3.1"        % Test,
     "uk.gov.hmrc"          %% "performance-test-runner"   % "5.2.0"        % Test,
     "io.gatling"            % "gatling-test-framework"    % gatlingVersion % Test,
-    "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % Test
+    "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % Test,
+    "org.scalaj"           %% "scalaj-http"               % "2.4.2"        % Test
   )
 }

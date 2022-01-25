@@ -48,7 +48,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("affinityGroup", "Organisation")
       .formParam("email", "user@test.com")
       .formParam("credentialRole", "User")
-      .formParam("redirectionUrl", fullUrl + "/on-sign-in")
+      .formParam("redirectionUrl", fullUrl)
       .formParam("enrolment[0].name", "HMRC-MTD-VAT")
       .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
       .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
@@ -94,6 +94,12 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
+
+  def getBusinessPay =
+    http("Get Report and Pay VAT on Sales page")
+      .get(fullUrl + "/business-pay")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
 
   def getAlreadyMadeSales =
     http("Get Already Made Sales page")
