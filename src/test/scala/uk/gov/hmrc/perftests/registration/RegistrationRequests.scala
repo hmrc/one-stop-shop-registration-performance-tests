@@ -295,14 +295,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getEuTaxReference(index: Int) =
     http("Get EU Tax Reference page")
-      .get(fullUrl + s"/euTaxReference/$index")
+      .get(fullUrl + s"/eu-tax-number/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postEuTaxReference(index: Int) =
     http("Enter EU Tax Reference")
-      .post(fullUrl + s"/euTaxReference/$index")
+      .post(fullUrl + s"/eu-tax-number/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "123456789")
       .check(status.in(200, 303))
@@ -340,7 +340,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postCheckEuVatDetails(index: Int) =
     http("Submit Check EU VAT Details")
-      .post(fullUrl + s"/check-tax-details/$index")
+      .post(fullUrl + s"/check-tax-details/$index?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200, 303))
 
@@ -353,7 +353,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postAddEuVatDetails(answer: Boolean) =
     http("Answer Add EU VAT Details")
-      .post(fullUrl + "/add-tax-details")
+      .post(fullUrl + "/add-tax-details?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
@@ -409,7 +409,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postAddPreviousRegistration(answer: Boolean) =
     http("Add Previous Registration")
-      .post(fullUrl + "/add-deregistration")
+      .post(fullUrl + "/add-deregistration?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
@@ -529,7 +529,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def postCheckYourAnswers =
     http("Post Check Your Answers page")
-      .post(fullUrl + "/check-answers")
+      .post(fullUrl + "/check-answers/false")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200, 303))
 
