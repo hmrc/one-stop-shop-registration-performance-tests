@@ -258,6 +258,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", answer)
       .check(status.in(200, 303))
 
+  def getSendGoods(index: Int) =
+    http("Get EU Send Goods page")
+      .get(fullUrl + s"/eu-send-goods/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postSendGoods(index: Int, answer: Boolean) =
+    http("Answer EU Send Goods")
+      .post(fullUrl + s"/eu-send-goods/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200, 303))
+
   def getEuVatNumber(index: Int) =
     http("Get EU VAT Number page")
       .get(fullUrl + s"/eu-vat-number/$index")
@@ -293,6 +307,27 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
+  def postFixedEstablishmentTradingName(index: Int) =
+    http("Enter Fixed Establishment Trading Name")
+      .post(fullUrl + s"/eu-trading-name/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "foo")
+      .check(status.in(200, 303))
+
+  def getSendGoodsTradingName(index: Int) =
+    http("Get EU Send Goods Trading Name page")
+      .get(fullUrl + s"/eu-send-goods-trading-name/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postSendGoodsTradingName(index: Int) =
+    http("Enter EU Send Goods Trading Name")
+      .post(fullUrl + s"/eu-send-goods-trading-name/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "EU Trading Name")
+      .check(status.in(200, 303))
+
   def getEuTaxReference(index: Int) =
     http("Get EU Tax Reference page")
       .get(fullUrl + s"/eu-tax-number/$index")
@@ -305,13 +340,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + s"/eu-tax-number/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "123456789")
-      .check(status.in(200, 303))
-
-  def postFixedEstablishmentTradingName(index: Int) =
-    http("Enter Fixed Establishment Trading Name")
-      .post(fullUrl + s"/eu-trading-name/$index")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "foo")
       .check(status.in(200, 303))
 
   def getFixedEstablishmentAddress(index: Int) =
@@ -329,6 +357,23 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("line2", "line2")
       .formParam("townOrCity", "townOrCity")
       .formParam("postCode", "ABC")
+      .check(status.in(200, 303))
+
+  def getSendGoodsAddress(index: Int) =
+    http("Get EU Send Goods Address page")
+      .get(fullUrl + s"/eu-send-goods-address/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postSendGoodsAddress(index: Int) =
+    http("Enter EU Send Goods Address")
+      .post(fullUrl + s"/eu-send-goods-address/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("line1", "1 The Street")
+      .formParam("line2", "A Village")
+      .formParam("townOrCity", "A City")
+      .formParam("postCode", "ABC 123D")
       .check(status.in(200, 303))
 
   def getCheckEuVatDetails(index: Int) =
