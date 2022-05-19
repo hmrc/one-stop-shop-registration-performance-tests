@@ -160,6 +160,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "yes")
       .check(status.in(200, 303))
 
+  def getCheckVatGroup =
+    http("Get Check VAT Group page")
+      .get(fullUrl + "/uk-vat-group")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postCheckVatGroup =
+    http("Enter Check VAT Group")
+      .post(fullUrl + "/uk-vat-group")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "false")
+      .check(status.in(200, 303))
+
   def getRegisteredCompanyName =
     http("Get Registered Company Name page")
       .get(fullUrl + "/registeredCompanyName")

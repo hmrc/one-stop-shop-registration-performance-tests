@@ -42,6 +42,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     resumeJourney,
     getCheckVatDetails,
     postCheckVatDetails,
+    getCheckVatGroup,
+    postCheckVatGroup,
     getHasTradingName,
     postHasTradingName,
     getTradingName(1),
