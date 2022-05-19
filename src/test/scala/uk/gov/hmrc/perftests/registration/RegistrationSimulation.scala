@@ -101,7 +101,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getPreviousEuCountry(1),
     postPreviousEuCountry(1, "BE"),
     getPreviousEuVatNumber(1),
-    postPreviousEuVatNumber(1, "123"),
+    postPreviousEuVatNumber(1, "1234567891"),
     getAddPreviousRegistration,
     postAddPreviousRegistration(false),
     getIsOnlineMarketplace,

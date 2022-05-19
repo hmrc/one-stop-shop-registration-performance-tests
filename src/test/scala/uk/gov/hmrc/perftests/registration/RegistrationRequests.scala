@@ -297,7 +297,7 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Enter EU VAT Number")
       .post(fullUrl + s"/eu-vat-number/$index")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "ES852369")
+      .formParam("value", "S85236911")
       .check(status.in(200, 303))
 
   def getHasFixedEstablishment(index: Int) =
