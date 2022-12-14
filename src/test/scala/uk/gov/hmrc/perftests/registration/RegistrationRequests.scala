@@ -22,6 +22,7 @@ import io.gatling.http.Predef._
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
 import java.time.LocalDate
+import scala.sys.SystemProperties.headless.value
 
 object RegistrationRequests extends ServicesConfiguration {
 
@@ -234,7 +235,7 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Get Is Tax Registered in EU page")
       .get(fullUrl + "/tax-in-eu")
       .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value-no").saveAs("csrfToken"))
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postIsTaxRegisteredInEu1 =
@@ -244,14 +245,14 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "false")
       .check(status.in(200, 303))
 
-  def getPreviousOss (index: Int) =
+  def getPreviousOss =
     http("Get Is Previous Oss page")
-      .get(fullUrl + "/previous-oss/index")
+      .get(fullUrl + "/previous-oss")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousOss (index: Int) =
+  def postPreviousOss  =
     http("Answer Previous Oss Page")
       .post(fullUrl + "/previous-oss")
       .formParam("csrfToken", "${csrfToken}")
@@ -302,14 +303,14 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getPreviousOssSchemeNumber(index: Int) =
     http("Get Previous Oss Scheme number page")
-      .get(fullUrl + s"previous-oss-scheme-number/$index")
+      .get(fullUrl + s"/previous-oss-scheme-number/1/1")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postPreviousOssSchemeNumber(index: Int) =
     http("Enter Previous Oss Scheme Number")
-      .post(fullUrl + s"/previous-oss-scheme-number/$index")
+      .post(fullUrl + s"/previous-oss-scheme-number/1/1")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "S85236911")
       .check(status.in(200, 303))
@@ -328,18 +329,18 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", answer)
       .check(status.in(200, 303))
 
-  def getPreviousScheme(index: Int) =
+  def getPreviousScheme =
     http("Get Previous Scheme page")
-      .get(fullUrl + s"/previous-scheme/$index")
+      .get(fullUrl + s"/previous-scheme/1/1")
       .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value_0").saveAs("csrfToken"))
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousScheme(index: Int, answer: Boolean) =
+  def postPreviousScheme =
     http("Answer Previous Scheme")
-      .post(fullUrl + s"/previous-scheme/$index")
+      .post(fullUrl + s"/previous-scheme/1/1")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", answer)
+      .formParam("value", "oss")
       .check(status.in(200, 303))
   def getEuVatNumber(index: Int) =
     http("Get EU VAT Number page")
@@ -630,17 +631,18 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200, 303))
 
-  def getPreviousSchemeAnswers (index:Int) =
+  def getPreviousSchemeAnswers =
     http("Get Check Your Answers page")
-      .get(fullUrl + "/previous-scheme-answers")
+      .get(fullUrl + "/previous-scheme-answer/1")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousSchemeAnswers (index:Int)=
+  def postPreviousSchemeAnswers =
     http("Post Check Your Answers page")
-      .post(fullUrl + "/previous-scheme-answers/false")
+      .post(fullUrl + "/previous-scheme-answer/1")
       .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", false)
       .check(status.in(200, 303))
 
   def getApplicationComplete =
