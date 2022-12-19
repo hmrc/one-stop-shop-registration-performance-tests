@@ -63,7 +63,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getPreviousOss ,
     postPreviousOss,
     getVatRegisteredInPreviousEuMemberState(1),
-    postVatRegisteredInPreviousEuMemberState(1, "ES"),
+    postVatRegisteredInPreviousEuMemberState(1, "EE"),
     getPreviousScheme,
     postPreviousScheme,
     getPreviousOssSchemeNumber(1),

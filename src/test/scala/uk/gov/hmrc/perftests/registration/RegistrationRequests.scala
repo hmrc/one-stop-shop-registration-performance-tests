@@ -312,7 +312,7 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Enter Previous Oss Scheme Number")
       .post(fullUrl + s"/previous-oss-scheme-number/1/1")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "S85236911")
+      .formParam("value", "EE852369111")
       .check(status.in(200, 303))
 
   def getVatRegistered(index: Int) =
