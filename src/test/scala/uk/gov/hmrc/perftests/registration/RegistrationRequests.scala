@@ -22,6 +22,7 @@ import io.gatling.http.Predef._
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
 import java.time.LocalDate
+import scala.sys.SystemProperties.headless.value
 
 object RegistrationRequests extends ServicesConfiguration {
 
@@ -230,6 +231,34 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "true")
       .check(status.in(200, 303))
 
+  def getIsTaxRegisteredInEu1 =
+    http("Get Is Tax Registered in EU page")
+      .get(fullUrl + "/tax-in-eu")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postIsTaxRegisteredInEu1 =
+    http("Answer Is Tax Registered in EU")
+      .post(fullUrl + "/tax-in-eu")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "false")
+      .check(status.in(200, 303))
+
+  def getPreviousOss =
+    http("Get Is Previous Oss page")
+      .get(fullUrl + "/previous-oss")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousOss  =
+    http("Answer Previous Oss Page")
+      .post(fullUrl + "/previous-oss")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "true")
+      .check(status.in(200, 303))
+
   def getVatRegisteredInEuMemberState(index: Int) =
     http("Get VAT Registered in EU Member State page")
       .get(fullUrl + s"/eu-tax/$index")
@@ -244,6 +273,48 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", countryCode)
       .check(status.in(200, 303))
 
+  def getPreviousCountry(index: Int) =
+    http("Get previous country page")
+      .get(fullUrl + s"/previous-country/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousCountry(index: Int, countryCode: String) =
+    http("Enter previous country")
+      .post(fullUrl + s"/previous-country/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", countryCode)
+      .check(status.in(200, 303))
+
+  def getVatRegisteredInPreviousEuMemberState(index: Int) =
+    http("Get VAT Registered in previous EU Member State page")
+      .get(fullUrl + s"/previous-country/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postVatRegisteredInPreviousEuMemberState(index: Int, countryCode: String) =
+    http("Enter VAT Registered in previous EU Member State")
+      .post(fullUrl + s"/previous-country/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", countryCode)
+      .check(status.in(200, 303))
+
+  def getPreviousOssSchemeNumber(index: Int) =
+    http("Get Previous Oss Scheme number page")
+      .get(fullUrl + s"/previous-oss-scheme-number/1/1")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousOssSchemeNumber(index: Int) =
+    http("Enter Previous Oss Scheme Number")
+      .post(fullUrl + s"/previous-oss-scheme-number/1/1")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "EE852369111")
+      .check(status.in(200, 303))
+
   def getVatRegistered(index: Int) =
     http("Get VAT Registered page")
       .get(fullUrl + s"/eu-vat/$index")
@@ -256,6 +327,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + s"/eu-vat/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
+      .check(status.in(200, 303))
+
+  def getPreviousScheme =
+    http("Get Previous Scheme page")
+      .get(fullUrl + s"/previous-scheme/1/1")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousScheme =
+    http("Answer Previous Scheme")
+      .post(fullUrl + s"/previous-scheme/1/1")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", "oss")
       .check(status.in(200, 303))
 
   def getEuVatNumber(index: Int) =
@@ -414,6 +499,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", answer)
       .check(status.in(200, 303))
 
+  def getAddDeRegistration =
+    http("Get Add Previous Registration page")
+      .get(fullUrl + "/add-deregistration")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAddDeRegistration(answer: Boolean) =
+    http("Add Previous Registration")
+      .post(fullUrl + "/add-deregistration?incompletePromptShown=false")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200, 303))
+
   def getBusinessAddress =
     http("Get Business Address page")
       .get(fullUrl + "/businessAddress")
@@ -531,6 +630,20 @@ object RegistrationRequests extends ServicesConfiguration {
     http("Post Check Your Answers page")
       .post(fullUrl + "/check-answers/false")
       .formParam("csrfToken", "${csrfToken}")
+      .check(status.in(200, 303))
+
+  def getPreviousSchemeAnswers =
+    http("Get Check Your Answers page")
+      .get(fullUrl + "/previous-scheme-answer/1")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousSchemeAnswers =
+    http("Post Check Your Answers page")
+      .post(fullUrl + "/previous-scheme-answer/1")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", false)
       .check(status.in(200, 303))
 
   def getApplicationComplete =
