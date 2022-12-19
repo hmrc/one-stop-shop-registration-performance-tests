@@ -342,6 +342,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "oss")
       .check(status.in(200, 303))
+
   def getEuVatNumber(index: Int) =
     http("Get EU VAT Number page")
       .get(fullUrl + s"/eu-vat-number/$index")
