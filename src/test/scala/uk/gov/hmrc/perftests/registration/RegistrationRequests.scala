@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -500,15 +500,15 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
 
   def getAddDeRegistration =
-    http("Get Add Previous Registration page")
-      .get(fullUrl + "/add-deregistration")
+    http("get Deregistered page")
+      .get(fullUrl + "/deregistered")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
   def postAddDeRegistration(answer: Boolean) =
-    http("Add Previous Registration")
-      .post(fullUrl + "/add-deregistration?incompletePromptShown=false")
+    http("Deregistered")
+      .post(fullUrl + "/deregistered?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
