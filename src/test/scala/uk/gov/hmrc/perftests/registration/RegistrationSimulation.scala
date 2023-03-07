@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +78,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postCheckEuVatDetails(1),
     getAddEuVatDetails,
     postAddEuVatDetails(true),
+    getAddDeRegistration,
+    postAddDeRegistration(true),
     getVatRegisteredInEuMemberState(2),
     postVatRegisteredInEuMemberState(2, "FR"),
     getVatRegistered(2),
@@ -96,14 +98,8 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postCheckEuVatDetails(2),
     getAddEuVatDetails,
     postAddEuVatDetails(false),
-    getPreviouslyRegistered,
-    postPreviouslyRegistered(true),
-    getPreviousEuCountry(1),
-    postPreviousEuCountry(1, "BE"),
-    getPreviousEuVatNumber(1),
-    postPreviousEuVatNumber(1, "1234567891"),
-    getAddPreviousRegistration,
-    postAddPreviousRegistration(false),
+    getAddDeRegistration,
+    postAddDeRegistration(false),
     getIsOnlineMarketplace,
     postIsOnlineMarketplace,
     getHasWebsite,
@@ -123,6 +119,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getCheckYourAnswers,
     postCheckYourAnswers,
     getApplicationComplete
+
   )
 
   runSimulation()
