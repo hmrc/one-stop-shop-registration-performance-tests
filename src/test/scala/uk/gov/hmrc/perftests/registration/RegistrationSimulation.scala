@@ -59,7 +59,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getPreviousOss,
     postPreviousOss,
     getPreviousCountry(1),
-    postPreviousCountry(1,"BE"),
+    postPreviousCountry(1, "BE"),
     getPreviousScheme,
     postPreviousScheme,
     getPreviousOssSchemeNumber(1),
@@ -93,7 +93,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getEuVatNumber,
     postEuVatNumber("EL123456789"),
     getFixedEuTradingName(1),
-    postFixedEuTradingName(1,"foo"),
+    postFixedEuTradingName(1, "foo"),
     getFixedEstablishmentAddress(1),
     postFixedEstablishmentAddress(1),
     getCheckTaxDetails(1),
@@ -109,9 +109,9 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getRegistrationType,
     postRegistrationType,
     getVatRegistered(2),
-    postVatRegistered(2,"MT12345678"),
+    postVatRegistered(2, "MT12345678"),
     getFixedEuTradingName(2),
-    postFixedEuTradingName(2,"foo two"),
+    postFixedEuTradingName(2, "foo two"),
     getFixedEstablishmentAddress(2),
     postFixedEstablishmentAddress(2),
     getCheckTaxDetails(2),
@@ -132,12 +132,14 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postAddWebsite(false),
     getBusinessContactDetails,
     postBusinessContactDetails,
+    getEmailVerification,
+    getPasscode,
+    postEmailVerification,
     getBankDetails,
     postBankDetails,
     getCheckYourAnswers,
     postCheckYourAnswers,
     getApplicationComplete
-
   )
 
   runSimulation()
