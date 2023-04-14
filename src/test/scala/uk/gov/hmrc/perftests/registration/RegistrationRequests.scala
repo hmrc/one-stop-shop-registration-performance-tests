@@ -32,6 +32,7 @@ object RegistrationRequests extends ServicesConfiguration {
   val loginUrl = baseUrlFor("auth-login-stub")
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
+  def selectorById(id: String): Expression[String]          = s"#$id"
 
   def goToAuthLoginPage =
     http("Go to Auth login page")
@@ -265,7 +266,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousOss  =
+  def postPreviousOss =
     http("Answer Previous Oss Page")
       .post(fullUrl + "/previous-oss")
       .formParam("csrfToken", "${csrfToken}")
@@ -342,14 +343,14 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "DK12345678")
       .check(status.in(200, 303))
 
-  def getVatRegistered(index:Int) =
+  def getVatRegistered(index: Int) =
     http("Get Eu VAT Number page")
       .get(fullUrl + s"/eu-vat-number/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postVatRegistered(index:Int,countryCode: String) =
+  def postVatRegistered(index: Int, countryCode: String) =
     http("Enter Eu Vat Number")
       .post(fullUrl + s"/eu-vat-number/$index")
       .formParam("csrfToken", "${csrfToken}")
@@ -398,14 +399,14 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "oss")
       .check(status.in(200, 303))
 
-  def getEuVatNumber=
+  def getEuVatNumber =
     http("Get EU VAT Number page")
       .get(fullUrl + s"/eu-vat-number/1")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postEuVatNumber(euVatNumber:String) =
+  def postEuVatNumber(euVatNumber: String) =
     http("Enter EU VAT Number")
       .post(fullUrl + s"/eu-vat-number/1")
       .formParam("csrfToken", "${csrfToken}")
@@ -433,7 +434,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postFixedEuTradingName(index: Int,tradingName: String) =
+  def postFixedEuTradingName(index: Int, tradingName: String) =
     http("Enter Fixed Eu Trading Name")
       .post(fullUrl + s"/eu-trading-name/$index")
       .formParam("csrfToken", "${csrfToken}")
@@ -688,6 +689,28 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("telephoneNumber", "01478523691")
       .formParam("emailAddress", "jane@email.com")
       .check(status.in(200, 303))
+      .check(header("Location").saveAs("emailVerificationUrl"))
+
+  def getEmailVerification =
+    http("Get Email Verification page")
+      .get(s"$${emailVerificationUrl}")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def getPasscode =
+    http("Get Passcode page")
+      .get(fullUrl + "/test-only/get-passcodes")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(status.in(200))
+      .check(css(selectorById("testOnlyPasscode")).saveAs("passcode"))
+
+  def postEmailVerification =
+    http("Enter Email Verification Passcode")
+      .post(s"$${emailVerificationUrl}")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("passcode", "${passcode}")
+      .check(status.in(200, 303))
 
   def getBankDetails =
     http("Get Bank Details page")
@@ -788,7 +811,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "true")
       .check(status.in(200, 303))
   def getSellGoodsToEuConsumersMethod  =
-       http("Get Sell Goods To Eu Consumers Method Page page")
+    http("Get Sell Goods To Eu Consumers Method Page page")
       .get(fullUrl + "/sells-goods-to-eu-consumer-method/1")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
