@@ -689,9 +689,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("telephoneNumber", "01478523691")
       .formParam("emailAddress", "jane@email.com")
       .check(status.in(200, 303))
-      .check(header("Location").optional.saveAs("emailVerificationUrl"))
-//      .check(header("Location").saveAs("emailVerificationUrl"))
-//      .check(currentLocation.saveAs("emailVerificationUrl"))
+      .check(header("Location").saveAs("emailVerificationUrl"))
 
   def getEmailVerification =
     http("Get Email Verification page")
