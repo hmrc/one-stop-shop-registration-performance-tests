@@ -703,10 +703,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .get(fullUrl + "/test-only/get-passcodes")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(status.in(200))
-      .check {
-        val t2 = css(selectorById("testOnlyPasscode"))
-        t2.saveAs("passcode")
-      }
+      .check(css(selectorById("testOnlyPasscode")).saveAs("passcode"))
 
   def postEmailVerification =
     http("Enter Email Verification Passcode")
