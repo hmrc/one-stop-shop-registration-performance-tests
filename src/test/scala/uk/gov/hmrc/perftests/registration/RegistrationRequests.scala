@@ -371,20 +371,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", schemeType)
       .check(status.in(200, 303))
 
-//  def getSecondPreviousScheme =
-//    http("Get second Previous Scheme page")
-//      .get(fullUrl + s"/previous-scheme/2/1")
-//      .header("Cookie", "mdtp=${mdtpCookie}")
-//      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-//      .check(status.in(200))
-//
-//  def postSecondPreviousScheme =
-//    http("Answer second Previous Scheme")
-//      .post(fullUrl + s"/previous-scheme/2/1")
-//      .formParam("csrfToken", "${csrfToken}")
-//      .formParam("value", "oss")
-//      .check(status.in(200, 303))
-
   def getEuVatNumber(index: Int) =
     http("Get EU VAT Number page")
       .get(fullUrl + s"/eu-vat-number/$index")
