@@ -364,11 +364,11 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousScheme(countryIndex: Int, schemeIndex: Int) =
+  def postPreviousScheme(countryIndex: Int, schemeIndex: Int, schemeType: String) =
     http("Answer Previous Scheme")
       .post(fullUrl + s"/previous-scheme/$countryIndex/$schemeIndex")
       .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "oss")
+      .formParam("value", schemeType)
       .check(status.in(200, 303))
 
 //  def getSecondPreviousScheme =
@@ -753,6 +753,35 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + "/previous-schemes-overview?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
+      .check(status.in(200, 303))
+
+  def getPreviousIossScheme(countryIndex: Int, schemeIndex: Int) =
+    http("Get Previous IOSS Scheme page")
+      .get(fullUrl + s"/previous-ioss-scheme/$countryIndex/$schemeIndex")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousIossScheme(countryIndex: Int, schemeIndex: Int, answer: Boolean) =
+    http("Previous IOSS Scheme")
+      .post(fullUrl + s"/previous-ioss-scheme/$countryIndex/$schemeIndex")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200, 303))
+
+  def getPreviousIossNumber(countryIndex: Int, schemeIndex: Int) =
+    http("Get Previous IOSS number page")
+      .get(fullUrl + s"/previous-ioss-number/$countryIndex/$schemeIndex")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postPreviousIossNumber(countryIndex: Int, schemeIndex: Int, iossNumber: String, intermediaryNumber: String) =
+    http("Previous IOSS Number")
+      .post(fullUrl + s"/previous-ioss-number/$countryIndex/$schemeIndex")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("previousSchemeNumber", iossNumber)
+      .formParam("previousIntermediaryNumber", intermediaryNumber)
       .check(status.in(200, 303))
 
   def getSellGoodsToEuConsumers =
