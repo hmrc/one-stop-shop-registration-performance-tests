@@ -665,7 +665,7 @@ object RegistrationRequests extends ServicesConfiguration {
 
   def getEmailVerification =
     http("Get Email Verification page")
-      .get(s"$${emailVerificationUrl}")
+      .get(fullUrl + s"$${emailVerificationUrl}")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
