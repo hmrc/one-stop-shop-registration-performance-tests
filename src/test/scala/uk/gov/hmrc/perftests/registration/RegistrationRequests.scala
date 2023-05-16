@@ -69,6 +69,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", false)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/sell-from-northern-ireland"))
 
   def getSellsGoodsFromNi =
     http("Get Sells Goods from NI page")
@@ -82,6 +83,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/northern-ireland-business"))
 
   def getBusinessBasedInNi =
     http("Get Business Based in NI page")
@@ -95,6 +97,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/business-pay"))
 
   def getBusinessPay =
     http("Get Report and Pay VAT on Sales page")
@@ -114,6 +117,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", true)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/date-of-first-sale"))
 
   def getDateOfFirstSale =
     http("Get Date Of First Sale page")
@@ -129,6 +133,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value.month", s"${LocalDate.now().getMonthValue}")
       .formParam("value.year", s"${LocalDate.now().getYear}")
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/previous-oss"))
 
   def getStartDate =
     http("Get Commencement Date page")
@@ -141,6 +146,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + "/start-date")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/tax-in-eu"))
 
   def resumeJourney =
     http("Resume journey")
@@ -160,6 +166,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "yes")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/have-uk-trading-name"))
 
   def getCheckVatGroup =
     http("Get Check VAT Group page")
@@ -196,12 +203,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postHasTradingName =
+  def postHasTradingName(index: Int) =
     http("Answer Has Trading Name")
       .post(fullUrl + "/have-uk-trading-name")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/uk-trading-name/$index"))
 
   def getTradingName(index: Int) =
     http("Get Trading Name page")
@@ -216,6 +224,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", tradingName)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/add-uk-trading-name"))
 
   def getAddTradingName =
     http("Get Add Trading Name page")
@@ -224,12 +233,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postAddTradingName(answer: Boolean) =
+  def testAddTradingName(answer: Boolean) =
     http("Add Trading Name")
       .post(fullUrl + "/add-uk-trading-name")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
+
+  def postAddTradingName(answer: Boolean, index: Option[Int]) =
+    if (answer) {
+      testAddTradingName(answer)
+        .check(header("Location").is(ossUrl + s"/uk-trading-name/${index.get}"))
+    } else {
+      testAddTradingName(answer)
+        .check(header("Location").is(ossUrl + "/already-made-sales"))
+    }
 
   def getIsTaxRegisteredInEu =
     http("Get Is Tax Registered in EU page")
@@ -238,26 +256,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postIsTaxRegisteredInEu =
+  def postIsTaxRegisteredInEu(index: Int) =
     http("Answer Is Tax Registered in EU")
       .post(fullUrl + "/tax-in-eu")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200, 303))
-
-  def getIsTaxRegisteredInEu1 =
-    http("Get Is Tax Registered in EU page")
-      .get(fullUrl + "/tax-in-eu")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def postIsTaxRegisteredInEu1 =
-    http("Answer Is Tax Registered in EU")
-      .post(fullUrl + "/tax-in-eu")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "false")
-      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/eu-tax/$index"))
 
   def getPreviousOss =
     http("Get Is Previous Oss page")
@@ -266,12 +271,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousOss =
+  def postPreviousOss(index: Int) =
     http("Answer Previous Oss Page")
       .post(fullUrl + "/previous-oss")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/previous-country/$index"))
 
   def getVatRegisteredInEuMemberState(index: Int) =
     http("Get Tax Registered in EU Member State page")
@@ -286,6 +292,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", countryCode)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/sells-goods-to-eu-consumers/$index"))
 
   def getPreviousCountry(index: Int) =
     http("Get previous country page")
@@ -294,26 +301,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousCountry(index: Int, countryCode: String) =
+  def postPreviousCountry(countryIndex: Int, schemeIndex: Int, countryCode: String) =
     http("Enter previous country")
-      .post(fullUrl + s"/previous-country/$index")
+      .post(fullUrl + s"/previous-country/$countryIndex")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", countryCode)
       .check(status.in(200, 303))
-
-  def getVatRegisteredInPreviousEuMemberState(index: Int) =
-    http("Get VAT Registered in previous EU Member State page")
-      .get(fullUrl + s"/previous-country/$index")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def postVatRegisteredInPreviousEuMemberState(index: Int, countryCode: String) =
-    http("Enter VAT Registered in previous EU Member State")
-      .post(fullUrl + s"/previous-country/$index")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", countryCode)
-      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/previous-scheme/$countryIndex/$schemeIndex"))
 
   def getPreviousOssSchemeNumber(countryIndex: Int, schemeIndex: Int) =
     http("Get Previous Oss Scheme number page")
@@ -328,6 +322,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", registrationNumber)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/previous-scheme-answers/$countryIndex"))
 
   def getVatRegistered(index: Int) =
     http("Get Eu VAT Number page")
@@ -364,12 +359,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousScheme(countryIndex: Int, schemeIndex: Int, schemeType: String) =
+  def testPreviousScheme(countryIndex: Int, schemeIndex: Int, schemeType: String) =
     http("Answer Previous Scheme")
       .post(fullUrl + s"/previous-scheme/$countryIndex/$schemeIndex")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", schemeType)
       .check(status.in(200, 303))
+
+  def postPreviousScheme(countryIndex: Int, schemeIndex: Int, schemeType: String) =
+    if (schemeType == "oss") {
+      testPreviousScheme(countryIndex, schemeIndex, schemeType)
+        .check(header("Location").is(ossUrl + s"/previous-oss-scheme-number/$countryIndex/$schemeIndex"))
+    } else {
+      testPreviousScheme(countryIndex, schemeIndex, schemeType)
+        .check(header("Location").is(ossUrl + s"/previous-ioss-scheme/$countryIndex/$schemeIndex"))
+    }
 
   def getEuVatNumber(index: Int) =
     http("Get EU VAT Number page")
@@ -384,6 +388,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", euVatNumber)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/eu-trading-name/$index"))
 
   def getHasFixedEstablishment(index: Int) =
     http("Get Has Fixed Establishment page")
@@ -412,6 +417,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", tradingName)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/eu-fixed-establishment-address/$index"))
 
   def getSendGoodsTradingName(index: Int) =
     http("Get EU Send Goods Trading Name page")
@@ -426,6 +432,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", tradingName)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/eu-send-goods-address/$index"))
 
   def getEuTaxReference(index: Int) =
     http("Get EU Tax Reference page")
@@ -440,6 +447,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", taxReference)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/eu-send-goods-trading-name/$index"))
 
   def getFixedEstablishmentAddress(index: Int) =
     http("Get Fixed Establishment Address page")
@@ -457,6 +465,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("townOrCity", "townOrCity")
       .formParam("postCode", "ABC")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/check-tax-details/$index"))
 
   def getSendGoodsAddress(index: Int) =
     http("Get EU Send Goods Address page")
@@ -474,6 +483,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("townOrCity", "A City")
       .formParam("postCode", "ABC 123D")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/check-tax-details/$index"))
 
   def getCheckTaxDetails(index: Int) =
     http("Get Check Tax Details page")
@@ -487,6 +497,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + s"/check-tax-details/$index?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/add-tax-details"))
 
   def getAddTaxDetails =
     http("Get Add VAT Details page")
@@ -495,12 +506,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postAddTaxDetails(answer: Boolean) =
+  def testAddTaxDetails(answer: Boolean) =
     http("Answer Add EU VAT Details")
       .post(fullUrl + "/add-tax-details?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
+
+  def postAddTaxDetails(answer: Boolean, index: Option[Int]) =
+    if (answer) {
+      testAddTaxDetails(answer)
+        .check(header("Location").is(ossUrl + s"/eu-tax/${index.get}"))
+    } else {
+      testAddTaxDetails(answer)
+        .check(header("Location").is(ossUrl + "/online-marketplace"))
+    }
 
   def getPreviouslyRegistered =
     http("Get Previously Registered page")
@@ -597,12 +617,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postHasWebsite(answer: Boolean) =
+  def postHasWebsite(answer: Boolean, index: Int) =
     http(s"Answer has website")
       .post(fullUrl + s"/give-website-address")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + s"/website-address/$index"))
 
   def getIsOnlineMarketplace =
     http(s"Get Is Online Marketplace page")
@@ -617,6 +638,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", false)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/give-website-address"))
 
   def getWebsite(index: Int) =
     http(s"Get Website page $index")
@@ -631,6 +653,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", website)
       .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/add-website-address"))
 
   def getAddWebsite =
     http("Get Add Website page")
@@ -639,12 +662,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postAddWebsite(answer: Boolean) =
+  def testAddWebsite(answer: Boolean) =
     http("Add Website")
       .post(fullUrl + "/add-website-address")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
+
+  def postAddWebsite(answer: Boolean, index: Option[Int]) =
+    if (answer) {
+      testAddWebsite(answer)
+        .check(header("Location").is(ossUrl + s"/website-address/${index.get}"))
+    } else {
+      testAddWebsite(answer)
+        .check(header("Location").is(ossUrl + "/business-contact-details"))
+    }
 
   def getBusinessContactDetails =
     http("Get Business Contact Details page")
@@ -661,6 +693,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("telephoneNumber", "01478523691")
       .formParam("emailAddress", "jane@email.com")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/bank-details"))
 
   def getBankDetails =
     http("Get Bank Details page")
@@ -677,6 +710,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("bic", "ABCDEF2A")
       .formParam("iban", "GB33BUKB20201555555555")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/check-answers"))
 
   def getCheckYourAnswers =
     http("Get Check Your Answers page")
@@ -690,6 +724,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .post(fullUrl + "/check-answers/false")
       .formParam("csrfToken", "${csrfToken}")
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/successful"))
 
   def getPreviousSchemeAnswers(index: Int) =
     http("Get Previous Scheme Answers page")
@@ -704,6 +739,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/previous-schemes-overview"))
 
   def getPreviousSchemesOverview =
     http("Get Previous Schemes Overview page")
@@ -712,12 +748,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousSchemesOverview(answer: Boolean) =
+  def testPreviousSchemesOverview(answer: Boolean) =
     http("Previous Schemes Overview")
       .post(fullUrl + "/previous-schemes-overview?incompletePromptShown=false")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
+
+  def postPreviousSchemesOverview(answer: Boolean, index: Option[Int]) =
+    if (answer) {
+      testPreviousSchemesOverview(answer)
+        .check(header("Location").is(ossUrl + s"/previous-country/${index.get}"))
+    } else {
+      testPreviousSchemesOverview(answer)
+        .check(header("Location").is(ossUrl + "/start-date"))
+    }
 
   def getPreviousIossScheme(countryIndex: Int, schemeIndex: Int) =
     http("Get Previous IOSS Scheme page")
@@ -732,6 +777,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/previous-ioss-number/$countryIndex/$schemeIndex"))
 
   def getPreviousIossNumber(countryIndex: Int, schemeIndex: Int) =
     http("Get Previous IOSS number page")
@@ -747,34 +793,22 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("previousSchemeNumber", iossNumber)
       .formParam("previousIntermediaryNumber", intermediaryNumber)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/previous-scheme-answers/$countryIndex"))
 
-  def getSellGoodsToEuConsumers =
+  def getSellGoodsToEuConsumers(index: Int) =
     http("Get Sell Goods To Eu Consumers page")
-      .get(fullUrl + "/sells-goods-to-eu-consumers/1")
+      .get(fullUrl + s"/sells-goods-to-eu-consumers/$index")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postSellGoodsToEuConsumers =
+  def postSellGoodsToEuConsumers(index: Int) =
     http("Answer Sell Goods To Eu Consumers page")
-      .post(fullUrl + "/sells-goods-to-eu-consumers/1")
+      .post(fullUrl + s"/sells-goods-to-eu-consumers/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", "true")
       .check(status.in(200, 303))
-
-  def getSecondSellGoodsToEuConsumers =
-    http("Get Sell Goods To Eu Consumers page")
-      .get(fullUrl + "/sells-goods-to-eu-consumers/2")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def postSecondSellGoodsToEuConsumers =
-    http("Answer Sell Goods To Eu Consumers page")
-      .post(fullUrl + "/sells-goods-to-eu-consumers/2")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("value", "true")
-      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/sells-goods-to-eu-consumer-method/$index"))
 
   def getSellGoodsToEuConsumersMethod(index: Int) =
     http("Get Sell Goods To Eu Consumers Method Page page")
@@ -789,6 +823,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", salesMethod)
       .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + s"/registration-type/$index"))
 
   def getRegistrationType(index: Int) =
     http("Get Registration Type page")
@@ -797,12 +832,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postRegistrationType(index: Int, registrationType: String) =
+  def testRegistrationType(index: Int, registrationType: String) =
     http("Answer Registration Type Page")
       .post(fullUrl + s"/registration-type/$index")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", registrationType)
       .check(status.in(200, 303))
+
+  def postRegistrationType(index: Int, registrationType: String) =
+    if (registrationType == "vatNumber") {
+      testRegistrationType(index, registrationType)
+        .check(header("Location").is(ossUrl + s"/eu-vat-number/$index"))
+    } else {
+      testRegistrationType(index, registrationType)
+        .check(header("Location").is(ossUrl + s"/eu-tax-number/$index"))
+    }
 
   def getApplicationComplete =
     http("Get Application Complete page")
