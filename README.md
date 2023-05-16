@@ -19,8 +19,9 @@ registration services.
 
 Use "sm --stop ONE_STOP_SHOP_REGISTRATION" and "sm --stop ONE_STOP_SHOP_REGISTRATION_FRONTEND" to stop the 
 registration backend and frontend services in service manager then in the terminal for each service run:
-
 sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
+
+NOTE: Amend application.conf in ONE_STOP_SHOP_REGISTRATION_FRONTEND repo so that email-verification-enabled is false.
 
 #### Smoke test
 

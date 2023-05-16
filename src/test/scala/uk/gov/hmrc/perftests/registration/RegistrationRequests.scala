@@ -661,28 +661,6 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("telephoneNumber", "01478523691")
       .formParam("emailAddress", "jane@email.com")
       .check(status.in(200, 303))
-      .check(header("Location").saveAs("emailVerificationUrl"))
-
-  def getEmailVerification =
-    http("Get Email Verification page")
-      .get(fullUrl + s"$${emailVerificationUrl}")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
-      .check(status.in(200))
-
-  def getPasscode =
-    http("Get Passcode page")
-      .get(fullUrl + "/test-only/get-passcodes")
-      .header("Cookie", "mdtp=${mdtpCookie}")
-      .check(status.in(200))
-      .check(css(selectorById("testOnlyPasscode")).saveAs("passcode"))
-
-  def postEmailVerification =
-    http("Enter Email Verification Passcode")
-      .post(s"$${emailVerificationUrl}")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("passcode", "${passcode}")
-      .check(status.in(200, 303))
 
   def getBankDetails =
     http("Get Bank Details page")
