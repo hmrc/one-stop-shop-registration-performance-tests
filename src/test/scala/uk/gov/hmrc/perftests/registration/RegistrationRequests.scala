@@ -57,6 +57,28 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
 
+  def upFrontAuthLoginWithOssEnrolment =
+    http("Enter Auth login credentials ")
+      .post(loginUrl + s"/auth-login-stub/gg-sign-in")
+      .formParam("authorityId", "")
+      .formParam("gatewayToken", "")
+      .formParam("credentialStrength", "strong")
+      .formParam("confidenceLevel", "50")
+      .formParam("affinityGroup", "Organisation")
+      .formParam("email", "user@test.com")
+      .formParam("credentialRole", "User")
+      .formParam("redirectionUrl", fullUrl)
+      .formParam("enrolment[0].name", "HMRC-MTD-VAT")
+      .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
+      .formParam("enrolment[0].state", "Activated")
+      .formParam("enrolment[1].name", "HMRC-OSS-ORG")
+      .formParam("enrolment[1].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[1].taxIdentifier[0].value", "${vrn}")
+      .formParam("enrolment[1].state", "Activated")
+      .check(status.in(200, 303))
+      .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
+
   def getAlreadyRegistered =
     http("Get Already Registered in EU page")
       .get(fullUrl + "/already-eu-registered")
@@ -153,6 +175,12 @@ object RegistrationRequests extends ServicesConfiguration {
       .get(fullUrl + "/on-sign-in")
       .check(status.in(303))
 
+  def getAmendJourney =
+    http("Get Amend Registration Journey")
+      .get(fullUrl + "/start-amend-journey")
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/change-your-registration"))
+
   def getCheckVatDetails =
     http("Get Check VAT Details page")
       .get(fullUrl + "/confirm-vat-details")
@@ -226,6 +254,21 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
       .check(header("Location").is(ossUrl + "/add-uk-trading-name"))
 
+  def getAmendTradingName(index: Int) =
+    http("Get Trading Name page")
+      .get(fullUrl + s"/amend-uk-trading-name/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAmendTradingName(index: Int, tradingName: String) =
+    http("Enter Trading Name")
+      .post(fullUrl + s"/amend-uk-trading-name/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", tradingName)
+      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/amend-add-uk-trading-name"))
+
   def getAddTradingName =
     http("Get Add Trading Name page")
       .get(fullUrl + "/add-uk-trading-name")
@@ -247,6 +290,29 @@ object RegistrationRequests extends ServicesConfiguration {
     } else {
       testAddTradingName(answer)
         .check(header("Location").is(ossUrl + "/already-made-sales"))
+    }
+
+  def getAmendAddTradingName =
+    http("Get Amend Add Trading Name page")
+      .get(fullUrl + "/amend-add-uk-trading-name")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def testAmendAddTradingName(answer: Boolean) =
+    http("Add Trading Name")
+      .post(fullUrl + "/amend-add-uk-trading-name")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200, 303))
+
+  def postAmendAddTradingName(answer: Boolean, index: Option[Int]) =
+    if (answer) {
+      testAmendAddTradingName(answer)
+        .check(header("Location").is(ossUrl + s"/amend-uk-trading-name/${index.get}"))
+    } else {
+      testAmendAddTradingName(answer)
+        .check(header("Location").is(ossUrl + "/change-your-registration"))
     }
 
   def getIsTaxRegisteredInEu =
@@ -726,6 +792,20 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
       .check(header("Location").is(ossUrl + "/successful"))
 
+  def getChangeYourRegistration =
+    http("Get Change Your Registration page")
+      .get(fullUrl + "/change-your-registration")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postChangeYourRegistration =
+    http("Post Change Your Registration page")
+      .post(fullUrl + "/change-your-registration?incompletePrompt=false")
+      .formParam("csrfToken", "${csrfToken}")
+      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/successful-amend"))
+
   def getPreviousSchemeAnswers(index: Int) =
     http("Get Previous Scheme Answers page")
       .get(fullUrl + s"/previous-scheme-answers/$index")
@@ -851,6 +931,12 @@ object RegistrationRequests extends ServicesConfiguration {
   def getApplicationComplete =
     http("Get Application Complete page")
       .get(fullUrl + "/successful")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(status.in(200))
+
+  def getSuccessfulAmend =
+    http("Get Successful Amend page")
+      .get(fullUrl + "/successful-amend")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(status.in(200))
 
