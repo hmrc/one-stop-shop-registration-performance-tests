@@ -158,6 +158,10 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postAmendTradingName(3, "3rd trading name amend"),
     getAmendAddTradingName,
     postAmendAddTradingName(false, None),
+    getAmendHasWebsite,
+    postAmendHasWebsite,
+    getAmendRemoveAllWebsites,
+    postAmendRemoveAllWebsites,
     getChangeYourRegistration,
     postChangeYourRegistration,
     getSuccessfulAmend

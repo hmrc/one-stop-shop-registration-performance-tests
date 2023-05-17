@@ -691,6 +691,36 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
       .check(header("Location").is(ossUrl + s"/website-address/$index"))
 
+  def getAmendHasWebsite =
+    http(s"Get Amend Has Website page")
+      .get(fullUrl + s"/amend-give-website-address")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAmendHasWebsite =
+    http(s"Answer amend has website")
+      .post(fullUrl + s"/amend-give-website-address")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", false)
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/amend-remove-all-websites"))
+
+  def getAmendRemoveAllWebsites =
+    http(s"Get Amend Remove All Websites page")
+      .get(fullUrl + s"/amend-remove-all-websites")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postAmendRemoveAllWebsites =
+    http(s"Answer Amend Remove All Websites")
+      .post(fullUrl + s"/amend-remove-all-websites")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/change-your-registration"))
+
   def getIsOnlineMarketplace =
     http(s"Get Is Online Marketplace page")
       .get(fullUrl + s"/online-marketplace")
