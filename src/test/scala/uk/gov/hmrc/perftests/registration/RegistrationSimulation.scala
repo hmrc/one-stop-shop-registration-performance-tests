@@ -148,7 +148,23 @@ class RegistrationSimulation extends PerformanceTestRunner {
     postBankDetails,
     getCheckYourAnswers,
     postCheckYourAnswers,
-    getApplicationComplete
+    getApplicationComplete,
+    goToAuthLoginPage,
+    upFrontAuthLoginWithOssEnrolment,
+    getAmendJourney,
+    getAmendAddTradingName,
+    postAmendAddTradingName(true, Some(3)),
+    getAmendTradingName(3),
+    postAmendTradingName(3, "3rd trading name amend"),
+    getAmendAddTradingName,
+    postAmendAddTradingName(false, None),
+    getAmendHasWebsite,
+    postAmendHasWebsite,
+    getAmendRemoveAllWebsites,
+    postAmendRemoveAllWebsites,
+    getChangeYourRegistration,
+    postChangeYourRegistration,
+    getSuccessfulAmend
   )
 
   runSimulation()
