@@ -18,7 +18,6 @@ package uk.gov.hmrc.perftests.registration
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.registration.RegistrationRequests._
-import utility.Client.clearAll
 
 class RegistrationSimulation extends PerformanceTestRunner {
 

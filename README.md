@@ -12,16 +12,12 @@ sm --start ONE_STOP_SHOP_ALL -r
 
 ## Running the tests
 
-### Run testOnly version of one-stop-shop-registration and one-stop-shop-registration-frontend from terminal
+### Run one-stop-shop-registration-frontend locally to turn off email verification
 
-In order to clear down the performance test registrations prior to each run. We need to use the test-only endpoint in the 
-registration services.
-
-Use "sm --stop ONE_STOP_SHOP_REGISTRATION" and "sm --stop ONE_STOP_SHOP_REGISTRATION_FRONTEND" to stop the 
-registration backend and frontend services in service manager then in the terminal for each service run:
+Use "sm --stop ONE_STOP_SHOP_REGISTRATION_FRONTEND" to stop the frontend services in service manager then in the terminal for each service run:
 sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 
-NOTE: Amend application.conf in ONE_STOP_SHOP_REGISTRATION_FRONTEND repo so that email-verification-enabled is false.
+Amend application.conf in ONE_STOP_SHOP_REGISTRATION_FRONTEND repo so that email-verification-enabled is false.
 
 #### Smoke test
 
