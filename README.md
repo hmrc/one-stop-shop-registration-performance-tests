@@ -19,6 +19,15 @@ sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 
 Amend application.conf in ONE_STOP_SHOP_REGISTRATION_FRONTEND repo so that email-verification-enabled is false.
 
+### Rejoin tests will require returns data
+
+In order to use VRN 600000050 for a rejoin, it requires the Q1 2024 return to be submitted in the environment.
+
+This can be added locally via the one-stop-shop-registration-journey tests or manually do a nil return.
+
+This should already be set up on staging, however can also be done manually as a nil return on there if it becomes deleted 
+in the future.
+
 #### Smoke test
 
 It might be useful to try the journey with one user to check that everything works fine before running the full performance test

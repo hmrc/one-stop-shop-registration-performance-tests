@@ -165,5 +165,28 @@ class RegistrationSimulation extends PerformanceTestRunner {
       getSuccessfulAmend
     )
 
+  setup("rejoinRegistration", "Rejoin Registration Journey") withRequests
+    (
+      goToAuthLoginPage,
+      upFrontAuthLoginWithOssEnrolmentForRejoin,
+      getRejoinJourney,
+      getRejoinAlreadyMadeSales,
+      postRejoinAlreadyMadeSales,
+      getRejoinDateOfFirstSale,
+      postRejoinDateOfFirstSale,
+      getRejoinStartDate,
+      postRejoinStartDate,
+      getRejoinRegistration,
+      getRejoinAddTradingName,
+      postRejoinAddTradingName(true, Some(3)),
+      getRejoinTradingName(3),
+      postRejoinTradingName(3, "3rd rejoin trading name"),
+      getRejoinAddTradingName,
+      postRejoinAddTradingName(false, None),
+      getRejoinRegistration,
+      postRejoinRegistration,
+      getSuccessfulAmend
+    )
+
   runSimulation()
 }

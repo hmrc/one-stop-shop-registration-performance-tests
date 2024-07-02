@@ -25,9 +25,10 @@ import java.time.LocalDate
 
 object RegistrationRequests extends ServicesConfiguration {
 
-  val baseUrl: String = baseUrlFor("one-stop-shop-registration-frontend")
-  val ossUrl: String  = "/pay-vat-on-goods-sold-to-eu/northern-ireland-register"
-  val fullUrl: String = baseUrl + ossUrl
+  val baseUrl: String       = baseUrlFor("one-stop-shop-registration-frontend")
+  val ossUrl: String        = "/pay-vat-on-goods-sold-to-eu/northern-ireland-register"
+  val fullUrl: String       = baseUrl + ossUrl
+  val rejoinJourney: String = s"$fullUrl/start-rejoin-journey"
 
   val loginUrl = baseUrlFor("auth-login-stub")
 
@@ -75,6 +76,28 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("enrolment[1].name", "HMRC-OSS-ORG")
       .formParam("enrolment[1].taxIdentifier[0].name", "VRN")
       .formParam("enrolment[1].taxIdentifier[0].value", "300000002")
+      .formParam("enrolment[1].state", "Activated")
+      .check(status.in(200, 303))
+      .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
+
+  def upFrontAuthLoginWithOssEnrolmentForRejoin =
+    http("Enter Auth login credentials ")
+      .post(loginUrl + s"/auth-login-stub/gg-sign-in")
+      .formParam("authorityId", "")
+      .formParam("gatewayToken", "")
+      .formParam("credentialStrength", "strong")
+      .formParam("confidenceLevel", "50")
+      .formParam("affinityGroup", "Organisation")
+      .formParam("email", "user@test.com")
+      .formParam("credentialRole", "User")
+      .formParam("redirectionUrl", rejoinJourney)
+      .formParam("enrolment[0].name", "HMRC-MTD-VAT")
+      .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[0].taxIdentifier[0].value", "600000050")
+      .formParam("enrolment[0].state", "Activated")
+      .formParam("enrolment[1].name", "HMRC-OSS-ORG")
+      .formParam("enrolment[1].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[1].taxIdentifier[0].value", "600000050")
       .formParam("enrolment[1].state", "Activated")
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
@@ -170,6 +193,49 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(303))
       .check(header("Location").is(ossUrl + "/tax-in-eu"))
 
+  def getRejoinAlreadyMadeSales =
+    http("Get Rejoin Already Made Sales page")
+      .get(fullUrl + "/rejoin-already-made-sales")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postRejoinAlreadyMadeSales =
+    http("Post Rejoin Already Made Sales")
+      .post(fullUrl + "/rejoin-already-made-sales")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/rejoin-date-of-first-sale"))
+
+  def getRejoinDateOfFirstSale =
+    http("Get Rejoin Date Of First Sale page")
+      .get(fullUrl + "/rejoin-date-of-first-sale")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postRejoinDateOfFirstSale =
+    http("Post Rejoin Date Of First Sale")
+      .post(fullUrl + "/rejoin-date-of-first-sale")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value.day", s"${LocalDate.now().getDayOfMonth}")
+      .formParam("value.month", s"${LocalDate.now().getMonthValue}")
+      .formParam("value.year", s"${LocalDate.now().getYear}")
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/rejoin-start-date"))
+
+  def getRejoinStartDate =
+    http("Get Rejoin Start Date page")
+      .get(fullUrl + "/rejoin-start-date")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postRejoinStartDate =
+    http("Post Rejoin Start Date")
+      .post(fullUrl + "/rejoin-start-date")
+      .formParam("csrfToken", "${csrfToken}")
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/rejoin-registration"))
+
   def resumeJourney =
     http("Resume journey")
       .get(fullUrl + "/on-sign-in")
@@ -180,6 +246,17 @@ object RegistrationRequests extends ServicesConfiguration {
       .get(fullUrl + "/start-amend-journey")
       .check(status.in(303))
       .check(header("Location").is(ossUrl + "/change-your-registration"))
+
+  def getRejoinRegistration =
+    http("Get Rejoin Registration")
+      .get(fullUrl + "/rejoin-registration")
+      .check(status.in(200))
+
+  def getRejoinJourney =
+    http("Get Rejoin Registration Journey")
+      .get(fullUrl + "/start-rejoin-journey")
+      .check(status.in(303))
+      .check(header("Location").is(ossUrl + "/rejoin-already-made-sales"))
 
   def getCheckVatDetails =
     http("Get Check VAT Details page")
@@ -300,7 +377,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200))
 
   def testAmendAddTradingName(answer: Boolean) =
-    http("Add Trading Name")
+    http("Amend Trading Name")
       .post(fullUrl + "/amend-add-uk-trading-name")
       .formParam("csrfToken", "${csrfToken}")
       .formParam("value", answer)
@@ -314,6 +391,44 @@ object RegistrationRequests extends ServicesConfiguration {
       testAmendAddTradingName(answer)
         .check(header("Location").is(ossUrl + "/change-your-registration"))
     }
+
+  def getRejoinAddTradingName =
+    http("Get Rejoin Add Trading Name page")
+      .get(fullUrl + "/rejoin-amend-add-uk-trading-name")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def testRejoinAddTradingName(answer: Boolean) =
+    http("Add Rejoin Trading Name")
+      .post(fullUrl + "/rejoin-amend-add-uk-trading-name")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", answer)
+      .check(status.in(200, 303))
+
+  def postRejoinAddTradingName(answer: Boolean, index: Option[Int]) =
+    if (answer) {
+      testRejoinAddTradingName(answer)
+        .check(header("Location").is(ossUrl + s"/rejoin-amend-uk-trading-name/${index.get}"))
+    } else {
+      testRejoinAddTradingName(answer)
+        .check(header("Location").is(ossUrl + "/rejoin-registration"))
+    }
+
+  def getRejoinTradingName(index: Int) =
+    http("Get Rejoin Trading Name page")
+      .get(fullUrl + s"/rejoin-amend-uk-trading-name/$index")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postRejoinTradingName(index: Int, tradingName: String) =
+    http("Enter Rejoin Trading Name")
+      .post(fullUrl + s"/rejoin-amend-uk-trading-name/$index")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", tradingName)
+      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/rejoin-amend-add-uk-trading-name"))
 
   def getIsTaxRegisteredInEu =
     http("Get Is Tax Registered in EU page")
@@ -836,6 +951,13 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
       .check(header("Location").is(ossUrl + "/successful-amend"))
 
+  def postRejoinRegistration =
+    http("Post Rejoin Registration page")
+      .post(fullUrl + "/rejoin-registration?incompletePrompt=false")
+      .formParam("csrfToken", "${csrfToken}")
+      .check(status.in(200, 303))
+      .check(header("Location").is(ossUrl + "/successful-rejoin"))
+
   def getPreviousSchemeAnswers(index: Int) =
     http("Get Previous Scheme Answers page")
       .get(fullUrl + s"/previous-scheme-answers/$index")
@@ -967,6 +1089,12 @@ object RegistrationRequests extends ServicesConfiguration {
   def getSuccessfulAmend =
     http("Get Successful Amend page")
       .get(fullUrl + "/successful-amend")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(status.in(200))
+
+  def getSuccessfulRejoin =
+    http("Get Successful Rejoin page")
+      .get(fullUrl + "/successful-rejoin")
       .header("Cookie", "mdtp=${mdtpCookie}")
       .check(status.in(200))
 
