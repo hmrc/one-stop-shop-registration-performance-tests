@@ -185,7 +185,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
       postRejoinAddTradingName(false, None),
       getRejoinRegistration,
       postRejoinRegistration,
-      getSuccessfulAmend
+      getSuccessfulRejoin
     )
 
   runSimulation()
