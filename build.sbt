@@ -1,6 +1,5 @@
 lazy val root = (project in file("."))
   .enablePlugins(GatlingPlugin)
-  .enablePlugins(SbtAutoBuildPlugin)
   .settings(
     name := "one-stop-shop-registration-performance-tests",
     version := "0.1.0-SNAPSHOT",
