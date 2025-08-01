@@ -1018,12 +1018,11 @@ object RegistrationRequests extends ServicesConfiguration {
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postPreviousIossNumber(countryIndex: Int, schemeIndex: Int, iossNumber: String, intermediaryNumber: String) =
+  def postPreviousIossNumber(countryIndex: Int, schemeIndex: Int, iossNumber: String) =
     http("Previous IOSS Number")
       .post(fullUrl + s"/previous-ioss-number/$countryIndex/$schemeIndex")
       .formParam("csrfToken", "#{csrfToken}")
       .formParam("previousSchemeNumber", iossNumber)
-      .formParam("previousIntermediaryNumber", intermediaryNumber)
       .check(status.in(200, 303))
       .check(header("Location").is(ossUrl + s"/previous-scheme-answers/$countryIndex"))
 

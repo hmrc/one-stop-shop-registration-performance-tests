@@ -79,7 +79,7 @@ class RegistrationSimulation extends PerformanceTestRunner {
     getPreviousIossScheme(3, 1),
     postPreviousIossScheme(3, 1, true),
     getPreviousIossNumber(3, 1),
-    postPreviousIossNumber(3, 1, "IM4421234567", "IN4421234567"),
+    postPreviousIossNumber(3, 1, "IM4421234567"),
     getPreviousSchemeAnswers(3),
     postPreviousSchemeAnswers(3, false),
     getPreviousSchemesOverview,
