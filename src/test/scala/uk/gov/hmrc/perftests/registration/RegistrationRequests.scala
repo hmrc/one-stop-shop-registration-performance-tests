@@ -55,7 +55,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("redirectionUrl", fullUrl)
       .formParam("enrolment[0].name", "HMRC-MTD-VAT")
       .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
-      .formParam("enrolment[0].taxIdentifier[0].value", "${vrn}")
+      .formParam("enrolment[0].taxIdentifier[0].value", "#{vrn}")
       .formParam("enrolment[0].state", "Activated")
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
