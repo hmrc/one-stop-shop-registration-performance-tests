@@ -808,7 +808,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", false)
       .check(status.in(303))
-      .check(header("Location").is(ossUrl + "/give-website-address"))
+      .check(header("Location").is(ossUrl + "/website-address/1"))
 
   def getWebsite(index: Int) =
     http(s"Get Website page $index")
