@@ -275,7 +275,7 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "yes")
       .check(status.in(200, 303))
-      .check(header("Location").is(ossUrl + "/have-uk-trading-name"))
+      .check(header("Location").is(ossUrl + "/have-no-other-uk-trading-names"))
 
   def getCheckVatGroup =
     http("Get Check VAT Group page")
@@ -305,18 +305,18 @@ object RegistrationRequests extends ServicesConfiguration {
       .formParam("value", "Foo Ltd")
       .check(status.in(200, 303))
 
-  def getHasTradingName =
-    http("Get Has Trading Name page")
-      .get(fullUrl + "/have-uk-trading-name")
+  def getIsOnlyTradingName =
+    http("Get Is Only Trading Name page")
+      .get(fullUrl + "/have-no-other-uk-trading-names")
       .header("Cookie", "mdtp=#{mdtpCookie}")
       .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
       .check(status.in(200))
 
-  def postHasTradingName(index: Int) =
-    http("Answer Has Trading Name")
-      .post(fullUrl + "/have-uk-trading-name")
+  def postIsOnlyTradingName(index: Int) =
+    http("Answer Is Only Trading Name")
+      .post(fullUrl + "/have-no-other-uk-trading-names")
       .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "true")
+      .formParam("value", "false")
       .check(status.in(200, 303))
       .check(header("Location").is(ossUrl + s"/uk-trading-name/$index"))
 
